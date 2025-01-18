@@ -8,7 +8,62 @@ class CUNYScraper:
         self.term = term
         self.session = requests.Session()
         professors = self.get_professors()
-        
+    
+    def load_second_webpage(self):
+        """
+        Payload
+        POST:
+            selectedSubjectName: Computer Science
+            subject_name: CMSC
+            selectedCCareerName: Undergraduate
+            courseCareer: UGRD
+
+            meetingStart: LT
+            selectedMeetingStartName: less than
+
+            meetingEnd: LE
+            selectedMeetingEndName: less than or equal to
+
+            daysOfWeek: I
+            selectedDaysOfWeekName: include only these days
+            instructor: B
+            selectedInstructorName: begins with
+            search_btn_search: Search
+                    
+        """
+        payload = {
+            "selectedSubjectName": "Computer Science",
+            "subject_name": "CMSC",
+            "selectedCCareerName": "Undergraduate",
+            "courseCareer": "UGRD",
+            "selectedCAttrName": "",
+            "courseAttr": "",
+            "selectedCAttrVName": "",
+            "courseAttValue": "",
+            "selectedReqDName": "",
+            "reqDesignation": "",
+            "selectedSessionName": "",
+            "class_session": "",
+            "selectedModeInsName": "",
+            "meetingStart": "LT",
+            "selectedMeetingStartName": "less than",
+            "meetingStartText": "",
+            "AndMeetingStartText": "",
+            "meetingEnd": "LE",
+            "selectedMeetingEndName": "less than or equal to",
+            "meetingEndText": "",
+            "AndMeetingEndText": "",
+            "daysOfWeek": "I",
+            "selectedDaysOfWeekName": "include only these days",
+            "instructor": "B",
+            "selectedInstructorName": "begins with",
+            "instructorName": "",
+            "search_btn_search": "Search",
+        }
+        # course name --> Computer Science
+        # subject_name  --> CMSC
+        temp = self.session.post(self.url, data = payload)
+        print(temp.text)
     def load_first_webpage(self):
         """
         Request Method: POST
@@ -40,9 +95,9 @@ class CUNYScraper:
             "term_value": "1252",
             "next_btn": "Next",
         }
-        test = self.session.post(self.url, data=payload)
-        print(test.text)
-        return
+        self.session.post(self.url, data=payload)
+
     def get_professors(self):
         self.load_first_webpage()
+        self.load_second_webpage()
 CUNYScraper(1,2)
