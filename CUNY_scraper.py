@@ -10,6 +10,13 @@ class CUNYScraper:
         professors = self.get_professors()
     
     def load_second_webpage(self):
+        def find_class_title(clean_html):
+            clean_string = a.replace('\xa0', ' ').split(' ')
+            if len(clean_string) < 12:
+                return ("", "")
+            subject = clean_string[11]
+            class_number = clean_string[12]
+            return (subject, class_number)
         """
         Payload
         POST:
@@ -63,7 +70,19 @@ class CUNYScraper:
         # course name --> Computer Science
         # subject_name  --> CMSC
         temp = self.session.post(self.url, data = payload)
-        print(temp.text)
+        soup = BeautifulSoup(temp.text, 'html.parser')
+
+        elements = soup.find_all(['span', 'td'])
+        subject = ""
+        class_number = ""
+        for element in elements:
+            if element:
+                a = str(element)
+                if a[:5] == '<span':
+                    subject, class_number = find_class_title(a)
+
+                
+
     def load_first_webpage(self):
         """
         Request Method: POST
