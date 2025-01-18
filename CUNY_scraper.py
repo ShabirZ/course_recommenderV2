@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-
+import re
 class CUNYScraper:
     def __init__(self, course, term):
         self.course = course
@@ -11,12 +11,41 @@ class CUNYScraper:
     
     def load_second_webpage(self):
         def find_class_title(clean_html):
-            clean_string = a.replace('\xa0', ' ').split(' ')
+            clean_string = element.replace('\xa0', ' ').split(' ')
             if len(clean_string) < 12:
                 return ("", "")
             subject = clean_string[11]
             class_number = clean_string[12]
             return (subject, class_number)
+
+        def find_td_info(html_text):
+            left = 0
+            while left < len(html_text):            
+                if html_text[left] == '>':
+                    left+=1
+                    break
+                left+=1
+
+            right = left
+            while right < len(html_text):
+                if html_text[right] == '<':
+                    right-=1
+                    break
+                right+=1
+            return (left, right)
+
+        def find_full_name(element, left, right):
+            # firstName, middleName, lastName
+            # firstName, lastName
+            name_str = element[left:right+1].split(' ')
+            return name_str
+        def find_days_time(element, left, right):
+            time_span_str = element[left:right+1].split(' ')
+            if len(time_span_str) < 3:
+                print(time_span_str)
+            else:
+                days, start_time, end_time = time_span_str[0], time_span_str[1], time_span_str[-1]
+                print(days, start_time, end_time)
         """
         Payload
         POST:
@@ -75,12 +104,34 @@ class CUNYScraper:
         elements = soup.find_all(['span', 'td'])
         subject = ""
         class_number = ""
+        curr_instructor = ""
+        class_days = ""
         for element in elements:
             if element:
-                a = str(element)
-                if a[:5] == '<span':
-                    subject, class_number = find_class_title(a)
+                element = str(element)
+                if element[:5] == '<span':
+                    subject, class_number = find_class_title(element)
+                else:
+                    container = set(['DaysAndTimes', 'Room', 'Instructor'])
+                    container2 = set(['DaysAndTimes', 'Instructor'])
+                    pattern = r'"(\b\w+\b)"'
+                    matches = re.findall(pattern, element)
+                    if len(matches)<1:
+                        continue
+                    if matches[0] in container2:
+                        left,right = find_td_info(element)
+                    if matches[0] == 'DaysAndTimes':
+                        find_days_time(element, left,right)
+                    elif matches[0] == 'Instructor':
+                        names = find_full_name(element, left, right)
+                        first_name = names[0]
+                        last_name = names[-1]
+                        middle_name = ""
+                        if len(names) == 3:
+                            middle_name = names[1]
 
+                    
+                    
                 
 
     def load_first_webpage(self):
