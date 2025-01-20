@@ -10,8 +10,23 @@ class CUNYScraper:
         professors = self.get_professors()
     
     def load_second_webpage(self):
+        def get_section(element_html, left,right):
+            #this function parses through sectoin tag
+            """
+            BEFORE:
+              <a href="CFSearchToolController?class_number_searched=NTI2ODU=&amp;session_searched=MQ==&amp;term_searched=MTI1Mg==&amp;inst_searched=UXVlZW5zIENvbGxlZ2U=">231-LEC Regular</a></td>
+            After:
+                211B-LAB Regular
+                211-LEC Regular
+                931-LEC Winter
+            """
+        
+            return element_html.replace('>', '<').split('<')[-5]
+            
+            
         def find_class_title(clean_html):
             clean_string = element.replace('\xa0', ' ').split(' ')
+
             if len(clean_string) < 12:
                 return ("", "")
             subject = clean_string[11]
@@ -42,10 +57,10 @@ class CUNYScraper:
         def find_days_time(element, left, right):
             time_span_str = element[left:right+1].split(' ')
             if len(time_span_str) < 3:
-                print(time_span_str)
-            else:
-                days, start_time, end_time = time_span_str[0], time_span_str[1], time_span_str[-1]
-                print(days, start_time, end_time)
+                return time_span_str[-1], '-1','-1'
+
+            days, start_time, end_time = time_span_str[0], time_span_str[1], time_span_str[-1]
+            return days, start_time, end_time
         """
         Payload
         POST:
@@ -106,6 +121,8 @@ class CUNYScraper:
         class_number = ""
         curr_instructor = ""
         class_days = ""
+        first_name, last_name, middle_name = "","",""
+        days, start_time, end_time = "", "", ""
         for element in elements:
             if element:
                 element = str(element)
@@ -113,15 +130,17 @@ class CUNYScraper:
                     subject, class_number = find_class_title(element)
                 else:
                     container = set(['DaysAndTimes', 'Room', 'Instructor'])
-                    container2 = set(['DaysAndTimes', 'Instructor'])
+                    container2 = set(['DaysAndTimes', 'Instructor', 'Section'])
                     pattern = r'"(\b\w+\b)"'
                     matches = re.findall(pattern, element)
                     if len(matches)<1:
                         continue
                     if matches[0] in container2:
                         left,right = find_td_info(element)
+                    if matches[0] == 'Section':
+                        section = get_section(element,left,right)
                     if matches[0] == 'DaysAndTimes':
-                        find_days_time(element, left,right)
+                        days, start_time, end_time = find_days_time(element, left,right)
                     elif matches[0] == 'Instructor':
                         names = find_full_name(element, left, right)
                         first_name = names[0]
@@ -129,7 +148,20 @@ class CUNYScraper:
                         middle_name = ""
                         if len(names) == 3:
                             middle_name = names[1]
+                        print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
 
+                        subject = subject.strip()
+                        class_number = class_number.strip()
+                        days = days.strip()
+                        first_name = first_name.strip()
+                        last_name = last_name.strip()
+                        start_time = start_time.strip()
+                        end_time = end_time.strip()
+                        section = section.strip()
+                        print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
+
+
+                    #note strip everything
                     
                     
                 
