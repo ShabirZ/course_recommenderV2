@@ -1,17 +1,27 @@
 from bs4 import BeautifulSoup
 import requests
 import re
+
 class CUNYScraper:
     def __init__(self, course, term):
         self.course = course
         self.url = "https://globalsearch.cuny.edu/CFGlobalSearchTool/CFSearchToolController"
         self.term = term
         self.session = requests.Session()
+        self.course_info = []
+        self.found_info = False
+        self.course_idx = 0
+
         professors = self.get_professors()
-    
+
+
+        #we need to populate course_info
+        #when we do ensure we never populate again (flag)
+
     def load_second_webpage(self):
-        def get_section(element_html, left,right):
-            #this function parses through sectoin tag
+        
+        def get_section(element_html, left,right): 
+            #parses through section tag to get section string
             """
             BEFORE:
               <a href="CFSearchToolController?class_number_searched=NTI2ODU=&amp;session_searched=MQ==&amp;term_searched=MTI1Mg==&amp;inst_searched=UXVlZW5zIENvbGxlZ2U=">231-LEC Regular</a></td>
@@ -25,6 +35,8 @@ class CUNYScraper:
             
             
         def find_class_title(clean_html):
+            #parses through section tag and gets class, class#
+            # ex: CSCI 313
             clean_string = element.replace('\xa0', ' ').split(' ')
 
             if len(clean_string) < 12:
@@ -34,6 +46,7 @@ class CUNYScraper:
             return (subject, class_number)
 
         def find_td_info(html_text):
+            #parses through tag to look for range where our data is
             left = 0
             while left < len(html_text):            
                 if html_text[left] == '>':
@@ -50,17 +63,22 @@ class CUNYScraper:
             return (left, right)
 
         def find_full_name(element, left, right):
-            # firstName, middleName, lastName
-            # firstName, lastName
+            #split name by space 
+            # ex:   Shabir Zahir --> [Shabir,Zahir], Shabir Ahamad Zahir --> [Shabir, Ahamad Zahir]
             name_str = element[left:right+1].split(' ')
             return name_str
+
         def find_days_time(element, left, right):
+            #returns starting time or ending time
+            #cases with no time : TBA will return -1
             time_span_str = element[left:right+1].split(' ')
             if len(time_span_str) < 3:
                 return time_span_str[-1], '-1','-1'
 
             days, start_time, end_time = time_span_str[0], time_span_str[1], time_span_str[-1]
             return days, start_time, end_time
+        
+       
         """
         Payload
         POST:
@@ -148,7 +166,7 @@ class CUNYScraper:
                         middle_name = ""
                         if len(names) == 3:
                             middle_name = names[1]
-                        print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
+                        #print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
 
                         subject = subject.strip()
                         class_number = class_number.strip()
@@ -158,7 +176,7 @@ class CUNYScraper:
                         start_time = start_time.strip()
                         end_time = end_time.strip()
                         section = section.strip()
-                        print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
+                        #print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
 
 
                     #note strip everything
@@ -167,6 +185,22 @@ class CUNYScraper:
                 
 
     def load_first_webpage(self):
+        def load_course_info(html):
+            html = BeautifulSoup(temp.text, 'html.parser')
+            lines = html.find(['select']).find('option')
+            for line in lines:
+                line = str(line)
+
+                pattern = r'"(.*?)"|>([^<]*?)<'
+
+                # Find all matches
+                matches = re.findall(pattern, line)
+
+                # Extract captured groups
+                result = [match[0] or match[1] for match in matches]  # Combine non-empty groups
+                if len(result) == 2:
+                    self.course_info.append(result)
+            print(self.course_info)
         """
         Request Method: POST
         first webPage Payload:
@@ -197,9 +231,13 @@ class CUNYScraper:
             "term_value": "1252",
             "next_btn": "Next",
         }
-        self.session.post(self.url, data=payload)
+        temp = self.session.post(self.url, data=payload)
+        if self.found_info == False:
+            load_course_info(temp)
+        
 
     def get_professors(self):
+        print("__________________________")
         self.load_first_webpage()
         self.load_second_webpage()
 CUNYScraper(1,2)
