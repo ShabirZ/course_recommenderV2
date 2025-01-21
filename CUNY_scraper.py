@@ -10,14 +10,16 @@ class CUNYScraper:
         self.session = requests.Session()
         self.course_info = []
         self.found_info = False
-        self.course_idx = 0
+        self.course_idx = 40
 
         professors = self.get_professors()
 
 
         #we need to populate course_info
         #when we do ensure we never populate again (flag)
-
+    def reset_webpage(self):
+        payload = {"new_search": "New Search"}
+        self.session.post(self.url, data=payload)
     def load_second_webpage(self):
         
         def get_section(element_html, left,right): 
@@ -101,8 +103,8 @@ class CUNYScraper:
                     
         """
         payload = {
-            "selectedSubjectName": "Computer Science",
-            "subject_name": "CMSC",
+            "selectedSubjectName": self.course_info[self.course_idx][1],
+            "subject_name": self.course_info[self.course_idx][0],
             "selectedCCareerName": "Undergraduate",
             "courseCareer": "UGRD",
             "selectedCAttrName": "",
@@ -176,7 +178,7 @@ class CUNYScraper:
                         start_time = start_time.strip()
                         end_time = end_time.strip()
                         section = section.strip()
-                        #print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
+                        print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
 
 
                     #note strip everything
@@ -200,7 +202,6 @@ class CUNYScraper:
                 result = [match[0] or match[1] for match in matches]  # Combine non-empty groups
                 if len(result) == 2:
                     self.course_info.append(result)
-            print(self.course_info)
         """
         Request Method: POST
         first webPage Payload:
@@ -234,10 +235,15 @@ class CUNYScraper:
         temp = self.session.post(self.url, data=payload)
         if self.found_info == False:
             load_course_info(temp)
+            self.found_info = True
         
 
     def get_professors(self):
-        print("__________________________")
-        self.load_first_webpage()
-        self.load_second_webpage()
+        while True:
+            self.load_first_webpage()
+            self.load_second_webpage()
+            self.course_idx+=1
+            if self.course_idx == len(self.course_info):
+                return
+            self.reset_webpage()
 CUNYScraper(1,2)
