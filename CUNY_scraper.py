@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import re
-
+from SQL_Server import DatabaseManager
 class CUNYScraper:
     def __init__(self, course, term):
         self.course = course
@@ -10,10 +10,11 @@ class CUNYScraper:
         self.session = requests.Session()
         self.course_info = []
         self.found_info = False
-        self.course_idx = 40
+        self.course_idx = 0
 
+        self.db = DatabaseManager()
         professors = self.get_professors()
-
+        self.db.close()
 
         #we need to populate course_info
         #when we do ensure we never populate again (flag)
@@ -179,7 +180,18 @@ class CUNYScraper:
                         end_time = end_time.strip()
                         section = section.strip()
                         print(subject ,class_number, days, first_name, last_name, start_time, '-', end_time, section)
-
+                        """
+                        course_name VARCHAR(50),
+                        course_code VARCHAR(15),
+                        days VARCHAR(20),
+                        first_name VARCHAR(30),
+                        last_name VARCHAR(30),
+                        start_time TIME,
+                        end_time TIME,
+                        section VARCHAR(30),
+                        
+                        """
+                        self.db.insert_into_course_schedule(subject, class_number, days, first_name, last_name, start_time, end_time, section)
 
                     #note strip everything
                     
