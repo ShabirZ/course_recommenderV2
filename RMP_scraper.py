@@ -51,98 +51,16 @@ class rmpProfessorIdScraper:
 
             
         """
-        data = {
-            "query" : "query TeacherSearchPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $query: TeacherSearchQuery!\n) {\n  search: newSearch {\n    ...TeacherSearchPagination_search_1jWD3d\n  }\n}\n\nfragment TeacherSearchPagination_search_1jWD3d on newSearch {\n  teachers(query: $query, first: $count, after: $cursor) {\n    didFallback\n    edges {\n      cursor\n      node {\n        ...TeacherCard_teacher\n        id\n        __typename\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    resultCount\n    filters {\n      field\n      options {\n        value\n        id\n      }\n    }\n  }\n}\n\nfragment TeacherCard_teacher on Teacher {\n  id\n  legacyId\n  avgRating\n  numRatings\n  ...CardFeedback_teacher\n  ...CardSchool_teacher\n  ...CardName_teacher\n  ...TeacherBookmark_teacher\n}\n\nfragment CardFeedback_teacher on Teacher {\n  wouldTakeAgainPercent\n  avgDifficulty\n}\n\nfragment CardSchool_teacher on Teacher {\n  department\n  school {\n    name\n    id\n  }\n}\n\nfragment CardName_teacher on Teacher {\n  firstName\n  lastName\n}\n\nfragment TeacherBookmark_teacher on Teacher {\n  id\n  isSaved\n}\n",
-            "variables": {
-                "count": 8,
-                "cursor": "YXJyYXljb25uZWN0aW9uOjMx"
-            },
-            "count": 8,
-            "cursor": "YXJyYXljb25uZWN0aW9uOjMx",
-            "query": {
-                "text": "",
-                "schoolID": "U2Nob29sLTIzMQ==",
-                "fallback": True
-            }
-        }
+
         # Define the URL and payload
         web_server_api_url = "https://www.ratemyprofessors.com/graphql"
 
         # Payload to send in the POST request
+        #
         payload = {
-            "query": """
-            query TeacherSearchPaginationQuery(
-            $count: Int!
-            $cursor: String
-            $query: TeacherSearchQuery!
-            ) {
-            search: newSearch {
-                ...TeacherSearchPagination_search_1jWD3d
-            }
-            }
-
-            fragment TeacherSearchPagination_search_1jWD3d on newSearch {
-            teachers(query: $query, first: $count, after: $cursor) {
-                didFallback
-                edges {
-                cursor
-                node {
-                    ...TeacherCard_teacher
-                    id
-                    __typename
-                }
-                }
-                pageInfo {
-                hasNextPage
-                endCursor
-                }
-                resultCount
-                filters {
-                field
-                options {
-                    value
-                    id
-                }
-                }
-            }
-            }
-
-            fragment TeacherCard_teacher on Teacher {
-            id
-            legacyId
-            avgRating
-            numRatings
-            ...CardFeedback_teacher
-            ...CardSchool_teacher
-            ...CardName_teacher
-            ...TeacherBookmark_teacher
-            }
-
-            fragment CardFeedback_teacher on Teacher {
-            wouldTakeAgainPercent
-            avgDifficulty
-            }
-
-            fragment CardSchool_teacher on Teacher {
-            department
-            school {
-                name
-                id
-            }
-            }
-
-            fragment CardName_teacher on Teacher {
-            firstName
-            lastName
-            }
-
-            fragment TeacherBookmark_teacher on Teacher {
-            id
-            isSaved
-            }
-            """,
+            "query": "query TeacherSearchPaginationQuery(\n  $count: Int!\n  $cursor: String\n  $query: TeacherSearchQuery!\n) {\n  search: newSearch {\n    ...TeacherSearchPagination_search_1jWD3d\n  }\n}\n\nfragment TeacherSearchPagination_search_1jWD3d on newSearch {\n  teachers(query: $query, first: $count, after: $cursor) {\n    didFallback\n    edges {\n      cursor\n      node {\n        ...TeacherCard_teacher\n        id\n        __typename\n      }\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    resultCount\n    filters {\n      field\n      options {\n        value\n        id\n      }\n    }\n  }\n}\n\nfragment TeacherCard_teacher on Teacher {\n  id\n  legacyId\n  avgRating\n  numRatings\n  ...CardFeedback_teacher\n  ...CardSchool_teacher\n  ...CardName_teacher\n  ...TeacherBookmark_teacher\n}\n\nfragment CardFeedback_teacher on Teacher {\n  wouldTakeAgainPercent\n  avgDifficulty\n}\n\nfragment CardSchool_teacher on Teacher {\n  department\n  school {\n    name\n    id\n  }\n}\n\nfragment CardName_teacher on Teacher {\n  firstName\n  lastName\n}\n\nfragment TeacherBookmark_teacher on Teacher {\n  id\n  isSaved\n}\n",
             "variables": {
-                "count": 8,
+                "count": 1000,
                 "cursor": "YXJyYXljb25uZWN0aW9uOjc=",
                 "query": {
                     "text": "",
