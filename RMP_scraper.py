@@ -4,7 +4,7 @@ import json
 import re
 from SQL_Server import DatabaseManager
 import base64
-
+import csv
 """
 The way Rate my prfessor works is u essentially send a request with a teacher ID
 Example:
@@ -18,6 +18,8 @@ class rmpProfessorIdScraper:
     def __init__(self):
         self.QC_url = "https://www.ratemyprofessors.com/search/professors/231?q=*"
         self.session = requests.session()
+        self.file = open('prof_RMP_ID.csv', mode='a', newline='')
+        self.writer = csv.writer(self.file)
     
     def load_front_page(self):
         def find_prof_count(soup):
@@ -94,7 +96,7 @@ class rmpProfessorIdScraper:
         legacy_ID = ""
         leg_count = 1
         offset = 0
-        while offset < min(prof_count,50):
+        while offset < prof_count:
             encoded_cursor = encode(offset)
             count_size = min(20, prof_count-offset)
             payload["variables"]["count"] = count_size
@@ -105,16 +107,16 @@ class rmpProfessorIdScraper:
 
             for i in range(len(result)):
                 result[i] = re.sub(r'[\'\"]', '', result[i])
+                # first name and last name in quotes: shring string by 1 on each side to remove
                 if result[i] == 'firstName':
-                    first_name = result[i+1]
+                    first_name = result[i+1][1:-1]
                 elif result[i] == 'lastName':
-                    last_name = result[i+1]
+                    last_name = result[i+1][1:-1]
                 elif result[i] == 'legacyId':
                     legacy_ID = result[i+1]
                     print(first_name, last_name, legacy_ID)
-                    print(leg_count)
+                    self.writer.writerow([first_name, last_name, legacy_ID])
                     leg_count+=1
-            print(offset)
             offset+=count_size
 
 
@@ -126,3 +128,4 @@ class rmpProfessorIdScraper:
 a = rmpProfessorIdScraper()
 prof_count = a.load_front_page()
 a.load_all_profs(prof_count)
+a.file.close()
