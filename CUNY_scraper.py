@@ -21,6 +21,7 @@ class CUNYScraper:
     def reset_webpage(self):
         payload = {"new_search": "New Search"}
         self.session.post(self.url, data=payload)
+        
     def load_second_webpage(self):
         
         def get_section(element_html, left,right): 
