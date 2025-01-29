@@ -44,6 +44,10 @@ def process_data():
                 # Submit the task to the executor
                 executor.submit(get_prof_score, url, first_name, last_name, prof_ID, writer)
 
+# Run the main function
+#process_data()
+
+#if any data missing:
 # File paths
 old_file_path = "old_list.csv"
 new_file_path = "prof_RMP_ID.csv"
@@ -69,10 +73,9 @@ for row in old_csv:
         last_name = row['last_name']
         id = row['PROF_ID']
         url = 'https://www.ratemyprofessors.com/professor/'
-        print(first_name, last_name)
-        get_prof_score(url, first_name, last_name, id, writer)
-# Run the main function
-#process_data()
+        print(first_name, last_name, id)
+        #get_prof_score(url, first_name, last_name, id, writer)
+
 
 
 """
