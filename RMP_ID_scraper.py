@@ -18,7 +18,7 @@ class rmpProfessorIdScraper:
     def __init__(self):
         self.QC_url = "https://www.ratemyprofessors.com/search/professors/231?q=*"
         self.session = requests.session()
-        self.file = open('prof_RMP_ID.csv', mode='a', newline='')
+        self.file = open('RMP_Prof_csvs\old_list.csv', mode='a', newline='')
         self.writer = csv.writer(self.file)
     
     def load_front_page(self):

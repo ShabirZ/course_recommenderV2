@@ -3,13 +3,13 @@ import openpyxl
 import csv
 
 print('start')
-sheets = pd.read_excel('Copy of Grade Distribution 2012-2023 Queens College (1).xlsx', sheet_name = None)
+sheets = pd.read_excel('grade_distribution_data\Copy of Grade Distribution 2012-2023 Queens College (1).xlsx', sheet_name = None)
 new_term_names = ['f2023', 's2023', 'f2022','s2022','f2021','s2021'] 
 old_term_names = ['f2020','s2020','s2019','f2018','s2018','f2017']
 
 
 
-file = open('prof_grade_avg.csv', mode='a', newline='')
+file = open('grade_distribution_data\prof_grade_avg.csv', mode='a', newline='')
 writer = csv.writer(file)
 
 
@@ -43,10 +43,10 @@ data = term_data(df,writer,'f2019',f_2019)
 
 
 # Load the CSV file
-df = pd.read_csv("prof_grade_avg.csv", header=None)  # Assuming no headers
+df = pd.read_csv("grade_distribution_data\prof_grade_avg.csv", header=None)  # Assuming no headers
 
 # Sort by column [1], then [2] if [1] is equal, then [4] if [2] is equal
 df_sorted = df.sort_values(by=[1, 2, 4])
 
 # Overwrite the same CSV file
-df_sorted.to_csv("prof_grade_avg.csv", index=False, header=False)
+df_sorted.to_csv("grade_distribution_data\prof_grade_avg.csv", index=False, header=False)

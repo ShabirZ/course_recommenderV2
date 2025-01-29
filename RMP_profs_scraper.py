@@ -49,8 +49,9 @@ def process_data():
 
 #if any data missing:
 # File paths
-old_file_path = "old_list.csv"
-new_file_path = "prof_RMP_ID.csv"
+
+old_file_path = "RMP_Prof_csvs\old_list.csv"
+new_file_path = "RMP_Prof_csvs\prof_RMP_ID.csv"
 with open('prof_RMP_ID.csv', mode='a', newline='') as outfile:
     writer = csv.writer(outfile)
 # Open and read the CSV files
