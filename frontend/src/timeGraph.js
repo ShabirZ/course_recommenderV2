@@ -36,41 +36,6 @@ export default function TimeGraph() {
     }
     
 
-
-
-  // Create columns and rows dynamically
-  /*
-  const columnsArray = [];
-  const days = ['monday','tuesday','wednesday','thursday','friday']
-  for (let col = 0; col < columns; col++) {
-    const rowsArray = [];
-    for (let row = 1; row <= rows; row++) {
-      rowsArray.push(
-        <div key={`row-${row}-col-${days[col]}`} id={`row-${row}-col-${col}`} className="row">
-            <div key="TOP" className={`row-${row} col-${col} toptime`}>
-                RowTop{row}
-            </div>
-            <div className="divider time"></div>
-            <div key="BOTTOM" className={`row-${row} col-${col} bottomtime`}>
-                RowBottom{row}
-         </div>
-</div>
-
-
-        
-        
-
-
-      );
-
-    }
-    columnsArray.push(
-      <div key={`col-${col}`} className="colParent">
-        {rowsArray}
-      </div>
-    );
-  }
-*/
   return (
     <div className="columns-container">
       {columnsArray}
