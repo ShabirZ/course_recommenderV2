@@ -107,4 +107,8 @@ Course Selection
     width: 450%;
     height: 8vh;
     font-size: large;
+    border-radius: 4px;
+    padding: 4px;
+    box-shadow: 2px 2px 8px #9da8cd; /* Soft shadow */
+
   }
