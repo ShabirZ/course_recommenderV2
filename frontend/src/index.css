@@ -100,15 +100,21 @@ Course Selection
     width: 70%;
     border: 2px solid red;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 5%;
+    flex-direction: column;
   }
   .classSearch{
-    width: 450%;
+    width: 45%;
     height: 8vh;
     font-size: large;
     border-radius: 4px;
     padding: 4px;
     box-shadow: 2px 2px 8px #9da8cd; /* Soft shadow */
 
+  }
+
+  .valid{
+    color: green;
+    
   }

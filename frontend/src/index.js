@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Header from "./header"; // Import your component
+import Header from "./components/header"; // Import your component
 import "./index.css";
-import TimeGraph from "./timeGraph"
-import CourseSelection from './courseSelection'
+import TimeGraph from "./components/timeGraph"
+import CourseSelection from './components/courseSelection'
 // Select the root element
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
