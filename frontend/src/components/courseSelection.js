@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import "../index.css";
 
 
@@ -7,15 +7,27 @@ import "../index.css";
 export default function CourseSelection(){
     const sharedInputStyle = {
         fontSize: '20px',
-        textShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)'
+        paddingTop: '20px',
     };
-    const invalidInputStyle{
-        
-    }
-    const ValidInput = ()=> <p style = {sharedInputStyle}> valid Password</p>
-    const InvalidInput = () => <p style = {sharedInputStyle}> invalid Password </p>
+    const invalidInputStyle = {
+        color: '#FF3131',        
+    };
+    const validInputStyle = {
+        color: '#39FF14',
+
+    };
+    const ValidInput = ()=> <p style = {{ ...sharedInputStyle, ...validInputStyle }}> Valid Password</p>
+    const InvalidInput = () => <p style = {{...sharedInputStyle, ...invalidInputStyle}}> Invalid Password </p>
+    
     function handlerFuntion (inputValue){
+        timeOutCountRef.current++;
+        const currTimeOut = timeOutCountRef.current;
         
+        setTimeout(() => {
+            if (currTimeOut == timeOutCountRef.current){
+                setValidResult(null);
+              }
+            }, 1000);
         const regex = /^[a-zA-Z]{3,5} \d{3,5}[a-zA-Z]?$/;
         if(regex.test(inputValue)){
             setValidResult(<ValidInput/>);
@@ -27,6 +39,7 @@ export default function CourseSelection(){
     };
     let info;
     let text;
+    const timeOutCountRef = useRef(0);
     const [courses, updateCouses] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [validResult, setValidResult] = useState(null);
