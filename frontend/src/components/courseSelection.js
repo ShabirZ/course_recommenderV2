@@ -2,7 +2,28 @@ import React from "react";
 import { useState, useRef } from 'react';
 import "../index.css";
 
-
+function ClassCard(){
+    let course = "CSCI";
+    let courseNumber = "313";
+    let prof = "Shabir Zahir";
+    let rating = "5.0 / 5";
+    let difficulty = "5.0 / 5";
+    let average = "3.2 / 4";
+    let styles = {
+        color: "red",
+        backgroundColor: 'red'
+    };
+    return (
+        <div className="classCard">
+            <div className="test" > {course}  </div>
+            <div className="test"> {courseNumber}  </div>
+            <div className="test"> {prof}  </div>
+            <div className="test"> {rating}   </div>
+            <div className="test"> {difficulty}  </div>
+            <div className="test"> {average}  </div>
+        </div>
+    
+    )};
 
 export default function CourseSelection(){
     const sharedInputStyle = {
@@ -53,6 +74,7 @@ export default function CourseSelection(){
                     }} />
             
             {validResult}
+            <ClassCard/>
         </div>
       );
 }
