@@ -123,3 +123,9 @@ Course Selection
     color: green;
     background-color: red;
   }
+  .classCard{
+    border: 2px solid white;
+    margin-top: 15px;
+    
+  }
+

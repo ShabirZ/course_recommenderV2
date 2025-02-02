@@ -3,24 +3,51 @@ import { useState, useRef } from 'react';
 import "../index.css";
 
 function ClassCard(){
-    let course = "CSCI";
+    let course = "CSCI 313";
     let courseNumber = "313";
     let prof = "Shabir Zahir";
     let rating = "5.0 / 5";
     let difficulty = "5.0 / 5";
     let average = "3.2 / 4";
-    let styles = {
-        color: "red",
-        backgroundColor: 'red'
+    
+    const styles = {
+        color: "white",
+        font: "Libre Franklin",
+        marginRight: "10px",
+        padding: "5px",
+        paddingRight:'10px',
+        paddingTop:'2px',
+
+        textShadow: "0 0 5px white, 0 0 10px white, 0 0 20px rgba(255, 255, 255, 0.8)"
     };
+
+    const object = {
+        display: "flex",
+        width:"100%",
+        flexDirection: "row",
+        padding: "0px",
+        justifyContent: "space-between",
+        
+    };
+    const divider ={
+        width:"100%",
+        color: "white",
+        height: "1%",
+        backgroundColor: "white"
+    }
     return (
         <div className="classCard">
-            <div className="test" > {course}  </div>
-            <div className="test"> {courseNumber}  </div>
-            <div className="test"> {prof}  </div>
-            <div className="test"> {rating}   </div>
-            <div className="test"> {difficulty}  </div>
-            <div className="test"> {average}  </div>
+            <div className = "courseName" style = {{ ...styles, ...object }}>
+            
+                <div style = {styles} > {course}   </div>
+                {/*<div style = {styles}> {courseNumber}  </div>*/}
+                <div style = {styles}> {prof}  </div>
+            </div>
+            <div style={divider}></div>
+            <div className = "courseRatings">
+                <div style = {styles}> RMP Score: {(parseFloat(rating) + parseFloat(difficulty))}   </div>
+                <div style = {styles}> Course Average: {parseFloat(average)*2.5}  </div>
+            </div>
         </div>
     
     )};
