@@ -20,8 +20,7 @@ function ClassCard({courseName, onRemove}){
         font: "Libre Franklin",
         marginRight: "10px",
         padding: "5px",
-        paddingRight:'10px',
-        paddingTop:'2px',
+
 
         textShadow: "0 0 5px white, 0 0 10px white, 0 0 20px rgba(255, 255, 255, 0.8)"
     };
@@ -35,11 +34,12 @@ function ClassCard({courseName, onRemove}){
         
     };
     const divider ={
-        width:"100%",
+        width:"101%",
         color: "white",
-        height: "1%",
-        backgroundColor: "white"
-    }
+        height: "2%",
+        backgroundColor: "solid blue",
+        border: "1px solid white",
+    };
 
     
     
@@ -49,12 +49,19 @@ function ClassCard({courseName, onRemove}){
             
                 <div style = {styles} > {courseName}   </div>
                 {/*<div style = {styles}> {courseNumber}  </div>*/}
-                <div style = {styles}> {prof}  </div>
+                <div style = {styles} className ="left-align"> {prof}  </div>
             </div>
+
             <div style={divider}></div>
-            <div className = "courseRatings">
-                <div style = {styles}> RMP Score: {(parseFloat(rating) + parseFloat(difficulty))}   </div>
-                <div style = {styles}> Course Average: {parseFloat(average)*2.5}  </div>
+
+            <div className = "ratings" style = {styles}>
+                <div className = "courseRatings">
+                    <div style = {styles}> RMP Score: {(parseFloat(rating) + parseFloat(difficulty))}   </div>
+                    <div style = {styles}> Course Average: {parseFloat(average)*2.5}  </div>
+                </div>
+                <div className="profScore" style={styles}>
+                    Final Score: {parseFloat((parseFloat(rating) + parseFloat(difficulty) + parseFloat(average) * 2.5) / 2)}
+                </div>
             </div>
         </div>
     

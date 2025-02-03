@@ -126,6 +126,22 @@ Course Selection
   .classCard{
     border: 2px solid white;
     margin-top: 15px;
-    
+    padding-right: 5px;
   }
 
+  .ratings{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+  }
+
+  .courseName, .ratings{
+    padding: 2px;
+    margin: 2px;
+  }
+
+  .divder{
+    margin: -20px;
+  }
