@@ -3,7 +3,12 @@ import { useState, useRef, useEffect } from 'react';
 import "../index.css";
 
 
-function ClassCard({courseName}){
+function ClassCard({courseName, onRemove}){
+
+    function test(){
+        console.log('1');
+        onRemove(courseName);
+    }
     let courseNumber = "313";
     let prof = "Shabir Zahir";
     let rating = "5.0 / 5";
@@ -39,7 +44,7 @@ function ClassCard({courseName}){
     
     
     return (
-        <div className="classCard">
+        <div className="classCard" onClick={() => test() }> {/*(onRemove(courseName)}>*/}
             <div className = "courseName" style = {{ ...styles, ...object }}>
             
                 <div style = {styles} > {courseName}   </div>
@@ -74,6 +79,7 @@ export default function CourseSelection(){
     const InvalidInput = () => <p style = {{...sharedInputStyle, ...invalidInputStyle}}> Invalid Password </p>
     
     const [coursesSelected, setCourse] = useState([]);
+
     const addCourse = (courseName) =>setCourse([...coursesSelected,courseName]);
     const removeCourse = (courseName) => setCourse(prevCourses => prevCourses.filter(course => course !== courseName));
 
@@ -116,8 +122,8 @@ export default function CourseSelection(){
             {validResult}
 
             <div className = "courseList">
-                {coursesSelected.map((course, index) => (
-                        <ClassCard key={index} courseName={course} onRemove={removeCourse} />
+                {coursesSelected.map((course) => (
+                        <ClassCard key={course} courseName={course} onRemove={removeCourse} />
                     ))}
             </div>;
         </div>
