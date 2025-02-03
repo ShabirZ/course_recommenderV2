@@ -1,9 +1,9 @@
 import React from "react";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import "../index.css";
 
-function ClassCard(){
-    let course = "CSCI 313";
+
+function ClassCard({courseName}){
     let courseNumber = "313";
     let prof = "Shabir Zahir";
     let rating = "5.0 / 5";
@@ -35,11 +35,14 @@ function ClassCard(){
         height: "1%",
         backgroundColor: "white"
     }
+
+    
+    
     return (
         <div className="classCard">
             <div className = "courseName" style = {{ ...styles, ...object }}>
             
-                <div style = {styles} > {course}   </div>
+                <div style = {styles} > {courseName}   </div>
                 {/*<div style = {styles}> {courseNumber}  </div>*/}
                 <div style = {styles}> {prof}  </div>
             </div>
@@ -51,6 +54,9 @@ function ClassCard(){
         </div>
     
     )};
+
+
+
 
 export default function CourseSelection(){
     const sharedInputStyle = {
@@ -67,6 +73,11 @@ export default function CourseSelection(){
     const ValidInput = ()=> <p style = {{ ...sharedInputStyle, ...validInputStyle }}> Valid Password</p>
     const InvalidInput = () => <p style = {{...sharedInputStyle, ...invalidInputStyle}}> Invalid Password </p>
     
+    const [coursesSelected, setCourse] = useState([]);
+    const addCourse = (courseName) =>setCourse([...coursesSelected,courseName]);
+    const removeCourse = (courseName) => setCourse(prevCourses => prevCourses.filter(course => course !== courseName));
+
+
     function handlerFuntion (inputValue){
         timeOutCountRef.current++;
         const currTimeOut = timeOutCountRef.current;
@@ -79,16 +90,18 @@ export default function CourseSelection(){
         const regex = /^[a-zA-Z]{3,5} \d{3,5}[a-zA-Z]?$/;
         if(regex.test(inputValue)){
             setValidResult(<ValidInput/>);
+            addCourse(inputValue);
+            return true;
+
         }
-        else{
-            setValidResult(<InvalidInput/>);
-        }
+        setValidResult(<InvalidInput/>);
+        return false;
         
     };
     let info;
     let text;
     const timeOutCountRef = useRef(0);
-    const [courses, updateCouses] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [validResult, setValidResult] = useState(null);
     return (
@@ -101,7 +114,12 @@ export default function CourseSelection(){
                     }} />
             
             {validResult}
-            <ClassCard/>
+
+            <div className = "courseList">
+                {coursesSelected.map((course, index) => (
+                        <ClassCard key={index} courseName={course} onRemove={removeCourse} />
+                    ))}
+            </div>;
         </div>
       );
 }
