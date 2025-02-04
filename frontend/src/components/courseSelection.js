@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useRef, useEffect } from 'react';
 import "../index.css";
+import SearchContainer from "./searchBar";
 
 
 function ClassCard({courseName, onRemove}){
@@ -125,7 +126,7 @@ export default function CourseSelection(){
                     if (e.key === "Enter")
                         handlerFuntion(inputValue);
                     }} />
-            
+            <SearchContainer/>
             {validResult}
 
             <div className = "courseList">

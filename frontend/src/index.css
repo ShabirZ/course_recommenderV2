@@ -105,7 +105,7 @@ Course Selection
     flex-direction: column;
   }
   .classSearch{
-    width: 45%;
+    /*width: 45%;*/
     height: 8vh;
     font-size: large;
     border-radius: 4px;
