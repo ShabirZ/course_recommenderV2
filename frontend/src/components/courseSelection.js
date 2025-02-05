@@ -118,6 +118,25 @@ export default function CourseSelection(){
     const [courses, setCourses] = useState([]);
     const [inputValue, setInputValue] = useState('');
     const [validResult, setValidResult] = useState(null);
+    const [onSearchBar, setSearchFlag] = useState(false);
+    const divRef = useRef(null);
+    const handleClickOutside = (e) => {
+        if (divRef.current && !divRef.current.contains(e.target)) {
+            console.log('no');
+            setSearchFlag(false); // Close the div if the click was outside
+        }
+    };
+
+    useEffect(() => {
+        // Listen for mouse clicks on the document
+        document.addEventListener("mousedown", handleClickOutside);
+
+        // Cleanup the event listener when the component unmounts
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className = 'courseBody'>
             <input className = 'classSearch' placeholder="CSCI 313" value={inputValue} 
@@ -125,8 +144,12 @@ export default function CourseSelection(){
                 onKeyDown={(e) => {
                     if (e.key === "Enter")
                         handlerFuntion(inputValue);
-                    }} />
-            <SearchContainer/>
+                    }} 
+                onClick={e => setSearchFlag(true)}
+                ref={divRef}
+            
+            />
+            {onSearchBar && <SearchContainer />}
             {validResult}
 
             <div className = "courseList">
