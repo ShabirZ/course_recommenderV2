@@ -112,6 +112,28 @@ export default function CourseSelection(){
         return false;
         
     };
+
+    function updateSearchFlag(inputValue){
+        console.log('start');
+        if(inputValue.length>0){
+            console.log(inputValue);
+            setSearchFlag(true);
+        }
+        else{
+            setSearchFlag(false);
+        }
+    }
+
+    function checkInput(currInput){
+        setInputValue(currInput);
+        if (currInput.length == 0){
+            setSearchFlag(false);
+            return 
+        }
+        setSearchFlag(true);
+    }
+
+    
     let info;
     let text;
     const timeOutCountRef = useRef(0);
@@ -120,9 +142,9 @@ export default function CourseSelection(){
     const [validResult, setValidResult] = useState(null);
     const [onSearchBar, setSearchFlag] = useState(false);
     const divRef = useRef(null);
+
     const handleClickOutside = (e) => {
         if (divRef.current && !divRef.current.contains(e.target)) {
-            console.log('no');
             setSearchFlag(false); // Close the div if the click was outside
         }
     };
@@ -140,12 +162,13 @@ export default function CourseSelection(){
     return (
         <div className = 'courseBody'>
             <input className = 'classSearch' placeholder="CSCI 313" value={inputValue} 
-                onInput={e => setInputValue(e.target.value)} 
+                //onInput={e => setInputValue(e.target.value)} 
+                onInput={e => checkInput(e.target.value)}
                 onKeyDown={(e) => {
                     if (e.key === "Enter")
                         handlerFuntion(inputValue);
                     }} 
-                onClick={e => setSearchFlag(true)}
+                onClick={() => updateSearchFlag(inputValue)}           
                 ref={divRef}
             
             />
