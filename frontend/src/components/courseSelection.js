@@ -83,8 +83,8 @@ export default function CourseSelection(){
         color: '#39FF14',
 
     };
-    const ValidInput = ()=> <p style = {{ ...sharedInputStyle, ...validInputStyle }}> Valid Password</p>
-    const InvalidInput = () => <p style = {{...sharedInputStyle, ...invalidInputStyle}}> Invalid Password </p>
+    const ValidInput = ()=> <p style = {{ ...sharedInputStyle, ...validInputStyle }}> Valid Course Name</p>
+    const InvalidInput = () => <p style = {{...sharedInputStyle, ...invalidInputStyle}}> Invalid Course Name </p>
     
     const [coursesSelected, setCourse] = useState([]);
 
