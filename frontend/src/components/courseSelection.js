@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useRef, useEffect } from 'react';
 import "../index.css";
 import SearchContainer from "./searchBar";
-
+import axios from "axios";
 
 function ClassCard({courseName, onRemove}){
 
@@ -23,7 +23,7 @@ function ClassCard({courseName, onRemove}){
         padding: "5px",
 
 
-        textShadow: "0 0 5px white, 0 0 10px white, 0 0 20px rgba(255, 255, 255, 0.8)"
+        //textShadow: "0 0 5px white, 0 0 10px white, 0 0 20px rgba(255, 255, 255, 0.8)"
     };
 
     const object = {
@@ -83,6 +83,20 @@ export default function CourseSelection(){
         color: '#39FF14',
 
     };
+    const getCurrClasses = async (searchInfo) =>{
+        try {
+            console.log('trying ' , searchInfo);
+            const response = await axios.post("http://localhost:5000/api/data", {
+              info : searchInfo
+             
+            });
+            console.log("Response from server:", response.data);
+            return response.data
+          } catch (error) {
+            console.error("Error:", error);
+          }
+
+        };
     const ValidInput = ()=> <p style = {{ ...sharedInputStyle, ...validInputStyle }}> Valid Course Name</p>
     const InvalidInput = () => <p style = {{...sharedInputStyle, ...invalidInputStyle}}> Invalid Course Name </p>
     
@@ -118,6 +132,7 @@ export default function CourseSelection(){
         if(inputValue.length>0){
             console.log(inputValue);
             setSearchFlag(true);
+            getCurrClasses(inputValue);
         }
         else{
             setSearchFlag(false);
@@ -130,6 +145,7 @@ export default function CourseSelection(){
             setSearchFlag(false);
             return 
         }
+        getCurrClasses(currInput);
         setSearchFlag(true);
     }
 
