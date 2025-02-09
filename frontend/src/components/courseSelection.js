@@ -84,6 +84,13 @@ export default function CourseSelection(){
 
     };
     const getCurrClasses = async (searchInfo) =>{
+        const regex = /^[a-zA-Z]{0,5}( ?\d{0,5}[a-zA-Z]?)?$/;
+        console.log(searchInfo,' :TRYING')
+        if (!regex.test(searchInfo)){
+            return []
+        }
+        console.log("test2")
+
         try {
             console.log('trying ' , searchInfo);
             const response = await axios.post("http://localhost:5000/api/data", {
