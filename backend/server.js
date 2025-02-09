@@ -37,7 +37,6 @@ app.post('/api/data', (req, res) => {
         res.status(500).send("Internal Server Error");
         return;
     }
-    console.log(results)
     res.json(results);
   });
   /*

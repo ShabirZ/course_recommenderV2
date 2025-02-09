@@ -84,6 +84,7 @@ export default function CourseSelection(){
 
     };
     const getCurrClasses = async (searchInfo) =>{
+        const course_list = [];
         const regex = /^[a-zA-Z]{0,5}( ?\d{0,5}[a-zA-Z]?)?$/;
         console.log(searchInfo,' :TRYING')
         if (!regex.test(searchInfo)){
@@ -95,9 +96,12 @@ export default function CourseSelection(){
             console.log('trying ' , searchInfo);
             const response = await axios.post("http://localhost:5000/api/data", {
               info : searchInfo
-             
             });
-            console.log("Response from server:", response.data);
+
+            response.data.forEach(item => {
+                console.log("Full Name:", item.fullName);
+                course_list.push(item.fullName)
+              });
             return response.data
           } catch (error) {
             console.error("Error:", error);
