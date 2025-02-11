@@ -6,7 +6,6 @@ function SearchCard({result}){
     const [isHovered,setHovered] = useState(false)
     const styles = {
         color: "black",
-        height: "40px",
         width: "100%",
         display: "flex",
         alignItems: "center",
@@ -21,6 +20,7 @@ function SearchCard({result}){
     return <div className = "searchCard" style = {styles} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} > {result}</div>
 }
 export default function SearchContainer({searchResults}) {
+    console.log(searchResults);
     
     const styles = {
         color: "red",
@@ -30,10 +30,16 @@ export default function SearchContainer({searchResults}) {
 
     return (
         <div className="searchContainer">
-            {searchResults.map((result, index) => (
-            <SearchCard key={index} result={result} />
-            ))}
-        </div>
+  {searchResults.length > 0 ? (
+    searchResults.map((result, index) => {
+      console.log("Rendering item:", result);  // Debugging
+      return <SearchCard key={index} result={result} />;
+    })
+  ) : (
+    <p>No results found</p>
+  )}
+</div>
+
 
         /*
         <div className = "searchContainer">

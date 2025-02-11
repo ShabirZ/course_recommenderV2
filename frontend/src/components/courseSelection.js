@@ -203,7 +203,7 @@ export default function CourseSelection(){
                 ref={divRef}
             
             />
-            {onSearchBar && <SearchContainer searchResults = {searchResults}/>}
+            {onSearchBar && <SearchContainer searchResults = {searchResults} className = "searchContainer"/>}
             {validResult}
 
             <div className = "courseList">
