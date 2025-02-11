@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useRef, useEffect } from 'react';
 import "./search.css";
 
-function SearchCard(){
+function SearchCard({result}){
     const [isHovered,setHovered] = useState(false)
     const styles = {
         color: "black",
@@ -18,9 +18,9 @@ function SearchCard(){
     };
 
     //#efefef
-    return <div className = "searchCard" style = {styles} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} > CSCI 313</div>
+    return <div className = "searchCard" style = {styles} onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} > {result}</div>
 }
-export default function SearchContainer() {
+export default function SearchContainer({searchResults}) {
     
     const styles = {
         color: "red",
@@ -29,7 +29,17 @@ export default function SearchContainer() {
     
 
     return (
+        <div className="searchContainer">
+            {searchResults.map((result, index) => (
+            <SearchCard key={index} result={result} />
+            ))}
+        </div>
+
+        /*
         <div className = "searchContainer">
+            for (result in searchResults){
+                create <searchCard result = {result}>
+            }
             <SearchCard></SearchCard>
             <SearchCard></SearchCard>
             <SearchCard></SearchCard>
@@ -51,7 +61,7 @@ export default function SearchContainer() {
             <SearchCard></SearchCard>
 
         </div>
-
+        */
     );
   }
     

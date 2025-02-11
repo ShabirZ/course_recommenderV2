@@ -102,8 +102,11 @@ export default function CourseSelection(){
                 console.log("Full Name:", item.fullName);
                 course_list.push(item.fullName)
               });
+            console.log(course_list)
+            setSearchResults(course_list)
             return response.data
           } catch (error) {
+            setSearchResults([])
             console.error("Error:", error);
           }
 
@@ -168,6 +171,7 @@ export default function CourseSelection(){
     const [inputValue, setInputValue] = useState('');
     const [validResult, setValidResult] = useState(null);
     const [onSearchBar, setSearchFlag] = useState(false);
+    const [searchResults, setSearchResults] = useState([]);
     const divRef = useRef(null);
 
     const handleClickOutside = (e) => {
@@ -199,7 +203,7 @@ export default function CourseSelection(){
                 ref={divRef}
             
             />
-            {onSearchBar && <SearchContainer />}
+            {onSearchBar && <SearchContainer searchResults = {searchResults}/>}
             {validResult}
 
             <div className = "courseList">
