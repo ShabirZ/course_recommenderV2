@@ -203,12 +203,12 @@ export default function CourseSelection(){
                 ref={divRef}
             
             />
-            {onSearchBar && <SearchContainer searchResults = {searchResults} className = "searchContainer"/>}
+            {onSearchBar && <SearchContainer searchResults = {searchResults} setInputValue={setInputValue} className = "searchContainer"/>}
             {validResult}
 
             <div className = "courseList">
                 {coursesSelected.map((course) => (
-                        <ClassCard key={course} courseName={course} onRemove={removeCourse} />
+                        <ClassCard key={course} courseName={course} onRemove={removeCourse}  />
                     ))}
             </div>;
         </div>
