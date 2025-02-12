@@ -41,13 +41,15 @@ function ClassCard({courseName, onRemove, color}){
         backgroundColor: "solid blue",
         border: "1px solid white",
     };
-
+    const [isHovered, setHovered] = useState(false);
+    
     const bgColor = {
-        backgroundColor : color
+        backgroundColor : color,
+        filter: isHovered? "brightness(80%)" : "brightness(100%)"
     }
-
     return (
-        <div className="classCard" onClick={() => test()} style = {bgColor} > {/*(onRemove(courseName)}>*/}
+        
+        <div className="classCard" onClick={() => test()} style = {bgColor}  onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}> {/*(onRemove(courseName)}>*/}
             <div className = "courseName" style = {{ ...styles, ...object }}>
             
                 <div style = {styles} > {courseName}   </div>
