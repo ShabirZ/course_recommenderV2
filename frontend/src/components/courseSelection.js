@@ -4,7 +4,7 @@ import "../index.css";
 import SearchContainer from "./searchBar";
 import axios from "axios";
 
-function ClassCard({courseName, onRemove}){
+function ClassCard({courseName, onRemove, color}){
 
     function test(){
         console.log('1');
@@ -42,10 +42,12 @@ function ClassCard({courseName, onRemove}){
         border: "1px solid white",
     };
 
-    
-    
+    const bgColor = {
+        backgroundColor : color
+    }
+
     return (
-        <div className="classCard" onClick={() => test() }> {/*(onRemove(courseName)}>*/}
+        <div className="classCard" onClick={() => test()} style = {bgColor} > {/*(onRemove(courseName)}>*/}
             <div className = "courseName" style = {{ ...styles, ...object }}>
             
                 <div style = {styles} > {courseName}   </div>
@@ -118,7 +120,8 @@ export default function CourseSelection(){
 
     const addCourse = (courseName) =>setCourse([...coursesSelected,courseName]);
     const removeCourse = (courseName) => setCourse(prevCourses => prevCourses.filter(course => course !== courseName));
-
+    
+    const cardColors = ["#8FBC8F","#FF1493","#FFA07A","#9932CC","#A0522D","#B0E0E6","#DC143C"]
 
     function handlerFuntion (inputValue){
         timeOutCountRef.current++;
@@ -190,6 +193,9 @@ export default function CourseSelection(){
         };
     }, []);
 
+    const bgColor = {
+        backgroundColor: cardColors.pop()
+    }
     return (
         <div className = 'courseBody'>
             <input className = 'classSearch' placeholder="CSCI 313" value={inputValue} 
@@ -208,7 +214,7 @@ export default function CourseSelection(){
 
             <div className = "courseList">
                 {coursesSelected.map((course) => (
-                        <ClassCard key={course} courseName={course} onRemove={removeCourse}  />
+                        <ClassCard key={course} courseName={course} onRemove={removeCourse} color = {cardColors.pop()}   />
                     ))}
             </div>;
         </div>
