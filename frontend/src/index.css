@@ -1,18 +1,23 @@
 *{
   padding: 0px;
   margin: 0px;
-  box-sizing: border-box
+  box-sizing: border-box;
+  font-family: "inter";
+}
+body{
+  background-color: #040507;
 }
 .background{
   background-color: #040507;
 
   width: 100vw;
-  height: 100vh;
+  height: 120vh;
 }
 .header{
-  background-color:#9faacd;
+  background-color:#8000FF
+  ;
   width: 100%;
-  height:10vh;
+  height:5vh;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -90,6 +95,19 @@
   border: 1px solid red;
 }
 
+.leftSide{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  height: 100%;
+  width: 70%;
+  border: 2px solid red;
+  display: flex;
+  justify-content: flex-start;
+  padding: 5%;
+  flex-direction: column;
+}
 
   /*
 =============================================================================
@@ -97,8 +115,7 @@ Course Selection
   */
   .courseBody{
     height: 100%;
-    width: 70%;
-    border: 2px solid red;
+    width: 100%;
     display: flex;
     justify-content: flex-start;
     padding: 5%;
@@ -144,4 +161,18 @@ Course Selection
 
   .divder{
     margin: -20px;
+  }
+
+
+  .genereateCourses{
+    width: 10vw;
+    height: 10vh;
+    padding: 5%;
+    margin: 5%;
+    font-size: 90%;
+    background-color:#D6A5D6; 
+    border-radius: 2%;
+    font-weight: 500;
+    color:white;
+    border: 2px solid white;
   }
