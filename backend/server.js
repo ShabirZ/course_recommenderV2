@@ -18,6 +18,23 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Express Server! 🚀");
 });
 
+app.get("/courses", (req, res) => {
+  const userInput = req.query.search; // Expecting something like 'Math 101'
+  
+  const query = `
+    SELECT * FROM courseschedule 
+    WHERE CONCAT(course_name, ' ', course_code) = ?
+  `;
+
+  db.query(query, [userInput], (err, results) => {
+    if (err) {
+      console.error("Error executing query:", err);
+      return res.status(500).json({ error: "Database query error" });
+    }
+    res.json(results);
+  });
+});
+
 app.post('/api/data', (req, res) => {
   const input = req.body.info; // Assuming input comes from request body
   console.log("RECEIVED: ", input);
