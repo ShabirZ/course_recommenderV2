@@ -11,9 +11,10 @@ function isConflict(schedule, course) {
     return false;
 }
 
-function backtrack(courses, index, schedule) {
+function backtrack(courses, index, schedule, allSchedules) {
     if (index === courses.length) {
-        return schedule; // Successfully scheduled all courses
+        allSchedules.push([...schedule]); // Store a valid schedule
+        return;
     }
 
     let courseOptions = courses[index];
@@ -21,20 +22,19 @@ function backtrack(courses, index, schedule) {
     for (let option of courseOptions) {
         if (!isConflict(schedule, option)) {
             schedule.push(option);
-            let result = backtrack(courses, index + 1, schedule);
-            if (result) return result; // Found a valid schedule
+            backtrack(courses, index + 1, schedule, allSchedules);
             schedule.pop(); // Backtrack
         }
     }
-
-    return null; // No valid schedule found
 }
 
 function scheduleCourses(courseOptions) {
-    return backtrack(courseOptions, 0, []) || "No valid schedule found";
+    let allSchedules = [];
+    backtrack(courseOptions, 0, [], allSchedules);
+    return allSchedules.length > 0 ? allSchedules : "No valid schedule found";
 }
 
-// Example Input: List of possible courses and their schedules
+// Example Input
 const courses = [
     [
         { name: "Math 101", instructor: "John Doe", days: "MoWe", times: ["11:00AM-1:00PM"] },

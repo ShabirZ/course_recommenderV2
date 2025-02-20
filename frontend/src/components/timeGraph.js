@@ -20,7 +20,8 @@ export default function TimeGraph() {
             let top_class = `row${row_idx} top`;
             let bottom_class = `row${row_idx} bottom`;
             rowsArray.push(
-            <div key={row_idx} className={row_class}>
+            <div key={row_idx} className={`${row_class} h-8 border border-gray-700`}
+            >
                 <div className ={top_class}>top</div>
                 <div className="divider"></div>
                 <div className ={bottom_class}>bottom</div>
@@ -37,7 +38,7 @@ export default function TimeGraph() {
     
 
   return (
-    <div className="columns-container">
+    <div className="columns-container border-indigo-500">
       {columnsArray}
     </div>
   );
