@@ -65,21 +65,7 @@ app.post('/api/data', (req, res) => {
     }
     res.json(results);
   });
-  /*
-  const regex = /^[a-zA-Z]{0,5}( ?\d{0,5}[a-zA-Z]?)?$/;
 
-  connection.query("SELECT DISTINCT course_name, course_code FROM courseschedule WHERE CONCAT(course_name,' ',course_code) LIKE INPUT {req}", (err, results) => {
-  if (err) {
-    console.error('Error:', err);
-    res.status(500).send('Database query error');
-  } else {
-    console.log(results);
-    //res.json(results); // Sends results back as JSON
-    res.json({message:"Recieved Correctly", received: results})
-  }
-      
-  });
-  */
   });
 
 app.listen(5000, () => {
@@ -119,10 +105,41 @@ function backtrack(courses, index, schedule) {
 
     return null; // No valid schedule found
 }
+//work later
+function getProfessors(courseOptions) {
+  courseOptions = courseOptions.toString();
+  console.log('testtt')
+  console.log('COURSE OPTOINS ->', courseOptions)
+  return new Promise((resolve, reject) => {
+    const query = `
+      SELECT *  
+      FROM courseschedule
+      WHERE CONCAT(course_name, ' ', course_code) = ?;
+    `;
+
+    connection.query(query, [courseOptions], (err, results) => {
+      if (err) {
+        console.error("Database error:", err);
+        reject(err);
+        return;
+      }
+      const newResults = results.filter(result => !result.section.includes("Winter"));
+      resolve(newResults);
+    });
+  });
+}
+
+getProfessors("CSCI 313")
+  .then((professors) => console.log(professors))
+  .catch((error) => console.error("Error fetching professors:", error));
+
+
 
 function scheduleCourses(courseOptions) {
+    getProfessors(courseOptions)
     return backtrack(courseOptions, 0, []) || "No valid schedule found";
 }
+
 
 // Example Input: List of possible courses and their schedules
 const courses = [

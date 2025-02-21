@@ -1,4 +1,4 @@
-class Person {
+class Prof {
     constructor(firstName, lastName, classSubject, classCode, startTime, endTime) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -17,8 +17,8 @@ class Person {
         this.profRating = profRating;
         this.profDifficulty = profDifficulty;
     }
+    calcGrade(){
+        //Does not account for when a professor has no ratings
+        return (this.RMP_rating+this.RMP_difficulty+2*this.courseAverage);
+    }
 }
-
-// Creating an instance of the class
-const person1 = new Person("Shabir", 21);
-person1.greet(); // Output: Hello, my name is Shabir and I am 21 years old.
