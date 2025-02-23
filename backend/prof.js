@@ -18,7 +18,7 @@ export default class Prof {
         this.profRating = profRating;
         this.profDifficulty = profDifficulty;
     }
-    calcGrade(){
+    getRating(){
         //Does not account for when a professor has no ratings
         return (this.RMP_rating+this.RMP_difficulty+2*this.courseAverage);
     }

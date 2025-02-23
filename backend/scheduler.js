@@ -11,9 +11,19 @@ function isConflict(schedule, course) {
     return false;
 }
 
-function backtrack(courses, index, schedule, allSchedules) {
+function calculateScore(schedule) {
+    return schedule.reduce((total, course) => total + course.getRating(), 0);
+}
+
+function backtrack(courses, index, schedule, allSchedules, bestSchedule) {
     if (index === courses.length) {
-        allSchedules.push([...schedule]); // Store a valid schedule
+        let scheduleScore = calculateScore(schedule);
+        allSchedules.push({ schedule: [...schedule], score: scheduleScore });
+
+        // Update the best schedule if this one has a higher score
+        if (!bestSchedule.best || scheduleScore > bestSchedule.best.score) {
+            bestSchedule.best = { schedule: [...schedule], score: scheduleScore };
+        }
         return;
     }
 
@@ -22,7 +32,7 @@ function backtrack(courses, index, schedule, allSchedules) {
     for (let option of courseOptions) {
         if (!isConflict(schedule, option)) {
             schedule.push(option);
-            backtrack(courses, index + 1, schedule, allSchedules);
+            backtrack(courses, index + 1, schedule, allSchedules, bestSchedule);
             schedule.pop(); // Backtrack
         }
     }
@@ -30,23 +40,25 @@ function backtrack(courses, index, schedule, allSchedules) {
 
 function scheduleCourses(courseOptions) {
     let allSchedules = [];
-    backtrack(courseOptions, 0, [], allSchedules);
-    return allSchedules.length > 0 ? allSchedules : "No valid schedule found";
+    let bestSchedule = { best: null };
+    backtrack(courseOptions, 0, [], allSchedules, bestSchedule);
+    
+    return allSchedules.length > 0 ? { allSchedules, bestSchedule: bestSchedule.best } : "No valid schedule found";
 }
 
 // Example Input
 const courses = [
     [
-        { name: "Math 101", instructor: "John Doe", days: "MoWe", times: ["11:00AM-1:00PM"] },
-        { name: "Math 101", instructor: "John Doe", days: "TuTh", times: ["9:00AM-11:00AM"] }
+        { name: "Math 101", instructor: "John Doe", days: "MoWe", times: ["11:00AM-1:00PM"], getRating: () => 8 },
+        { name: "Math 101", instructor: "John Doe", days: "TuTh", times: ["9:00AM-11:00AM"], getRating: () => 7 }
     ],
     [
-        { name: "CS 101", instructor: "Jane Smith", days: "MoWe", times: ["1:00PM-3:00PM"] },
-        { name: "CS 101", instructor: "Jane Smith", days: "TuTh", times: ["11:00AM-1:00PM"] }
+        { name: "CS 101", instructor: "Jane Smith", days: "MoWe", times: ["1:00PM-3:00PM"], getRating: () => 9 },
+        { name: "CS 101", instructor: "Jane Smith", days: "TuTh", times: ["11:00AM-1:00PM"], getRating: () => 6 }
     ],
     [
-        { name: "Physics 101", instructor: "Mike Brown", days: "MoWe", times: ["9:00AM-11:00AM"] },
-        { name: "Physics 101", instructor: "Mike Brown", days: "TuTh", times: ["3:00PM-5:00PM"] }
+        { name: "Physics 101", instructor: "Mike Brown", days: "MoWe", times: ["9:00AM-11:00AM"], getRating: () => 8 },
+        { name: "Physics 101", instructor: "Mike Brown", days: "TuTh", times: ["3:00PM-5:00PM"], getRating: () => 5 }
     ]
 ];
 
