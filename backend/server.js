@@ -1,3 +1,4 @@
+const Prof = require('./prof'); // Using require for Prof class
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -35,14 +36,51 @@ app.get("/courses", (req, res) => {
   });
 });
 
-app.get("/schedule", (req, res) => {
-  const userInput = req.query.search; // Expecting something like ['Math 101', 'CSCI 313' ,...]
+app.get("/schedule", async (req, res) => {
+  const userInput = req.query.search; // Expecting an array like ['Math 101', 'CSCI 313']
   
-  
-  
-  res.json(results);
+  let courseProfessors = [];
+
+  try {
+    // Process all courses asynchronously
+    const professorPromises = userInput.map(async (currentClass) => {
+      let currentProfArr = [];
+
+      try {
+        const professors = await getProfessors(currentClass);
+        console.log(professors);
+
+        professors.forEach((profObj) => {
+          // Extract properties from professor object
+          let currentProf = new Prof(
+            profObj.first_name, 
+            profObj.last_name, 
+            profObj.course_name,  // Fixed syntax issue
+            profObj.course_code, 
+            profObj.start_time, 
+            profObj.end_time, 
+            profObj.section
+          );
+
+          currentProfArr.push(currentProf);
+        });
+      } catch (error) {
+        console.error(`Error fetching professors for ${currentClass}:`, error);
+      }
+
+      return currentProfArr;
+    });
+
+    // Wait for all course professor lists to resolve
+    courseProfessors = await Promise.all(professorPromises);
+    
+    res.json(courseProfessors);
+  } catch (error) {
+    console.error("Error handling schedule request:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-);
+});
+
 
 app.post('/api/data', (req, res) => {
   const input = req.body.info; // Assuming input comes from request body
@@ -74,37 +112,6 @@ app.listen(5000, () => {
 });
 
 
-function isConflict(schedule, course) {
-    for (let scheduledCourse of schedule) {
-        for (let time of scheduledCourse.times) {
-            for (let newTime of course.times) {
-                if (time === newTime) {
-                    return true; // Conflict detected
-                }
-            }
-        }
-    }
-    return false;
-}
-
-function backtrack(courses, index, schedule) {
-    if (index === courses.length) {
-        return schedule; // Successfully scheduled all courses
-    }
-
-    let courseOptions = courses[index];
-
-    for (let option of courseOptions) {
-        if (!isConflict(schedule, option)) {
-            schedule.push(option);
-            let result = backtrack(courses, index + 1, schedule);
-            if (result) return result; // Found a valid schedule
-            schedule.pop(); // Backtrack
-        }
-    }
-
-    return null; // No valid schedule found
-}
 //work later
 function getProfessors(courseOptions) {
   courseOptions = courseOptions.toString();
@@ -130,31 +137,12 @@ function getProfessors(courseOptions) {
 }
 
 getProfessors("CSCI 313")
-  .then((professors) => console.log(professors))
+  .then((professors) => {
+    console.log(professors);
+    professors.forEach((profObj) => {
+      //firstName, lastName, classSubject, classCode, startTime, endTime, section
+      
+      console.log(profObj.course_code);
+    });
+  })
   .catch((error) => console.error("Error fetching professors:", error));
-
-
-
-function scheduleCourses(courseOptions) {
-    getProfessors(courseOptions)
-    return backtrack(courseOptions, 0, []) || "No valid schedule found";
-}
-
-
-// Example Input: List of possible courses and their schedules
-const courses = [
-    [
-        { name: "Math 101", instructor: "John Doe", days: "MoWe", times: ["11:00AM-1:00PM"] },
-        { name: "Math 101", instructor: "John Doe", days: "TuTh", times: ["9:00AM-11:00AM"] }
-    ],
-    [
-        { name: "CS 101", instructor: "Jane Smith", days: "MoWe", times: ["1:00PM-3:00PM"] },
-        { name: "CS 101", instructor: "Jane Smith", days: "TuTh", times: ["11:00AM-1:00PM"] }
-    ],
-    [
-        { name: "Physics 101", instructor: "Mike Brown", days: "MoWe", times: ["9:00AM-11:00AM"] },
-        { name: "Physics 101", instructor: "Mike Brown", days: "TuTh", times: ["3:00PM-5:00PM"] }
-    ]
-];
-
-console.log(scheduleCourses(courses));

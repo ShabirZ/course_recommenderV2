@@ -1,11 +1,12 @@
-class Prof {
-    constructor(firstName, lastName, classSubject, classCode, startTime, endTime) {
+export default class Prof {
+    constructor(firstName, lastName, classSubject, classCode, startTime, endTime, section) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.classSubject = classSubject;
         this.classCode = classCode;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.section = section;
         this.RMP_rating = null;
         this.RMP_difficulty = null;
         this.courseAverage = null;
@@ -22,3 +23,4 @@ class Prof {
         return (this.RMP_rating+this.RMP_difficulty+2*this.courseAverage);
     }
 }
+
