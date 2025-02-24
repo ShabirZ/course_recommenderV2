@@ -35,7 +35,26 @@ app.get("/courses", (req, res) => {
     res.json(results);
   });
 });
-
+function searchProfRMP(first_name, last_name){
+  /*
+  const query = `
+    SELECT prof_rating, prof_difficulty
+    FROM RMP_score 
+    WHERE CONCAT(first_name, ' ', last_name) = ?
+  `
+  let fullName = first_name + last_name;
+  db.query(query, [fullName],(err,results) =>{
+    if (err){
+      console.log('error with rmp DB request');
+    }
+    if(results.length() == 0){
+      return [-1,-1];
+    }
+    console.log(results[0]);
+    return [results[0],results[1]];
+  
+  });*/
+}
 app.get("/schedule", async (req, res) => {
   const userInput = req.query.search; // Expecting an array like ['Math 101', 'CSCI 313']
   
@@ -62,9 +81,15 @@ app.get("/schedule", async (req, res) => {
             profObj.section
           );
 
+
+          
+
+
+          console.log(searchProfRMP(first_name, last_name));
           currentProfArr.push(currentProf);
         });
-      } catch (error) {
+      }
+       catch (error) {
         console.error(`Error fetching professors for ${currentClass}:`, error);
       }
 
@@ -136,13 +161,42 @@ function getProfessors(courseOptions) {
   });
 }
 
+
+
 getProfessors("CSCI 313")
+
   .then((professors) => {
     console.log(professors);
     professors.forEach((profObj) => {
       //firstName, lastName, classSubject, classCode, startTime, endTime, section
-      
       console.log(profObj.course_code);
+
+      first_name = profObj.first_name;
+      last_name = profObj.last_name;
+      const query = `
+            SELECT prof_rating, prof_difficulty
+            FROM RMP_score 
+            WHERE CONCAT(first_name, ' ', last_name) = ?
+          `
+
+          let fullName =  first_name + ' '+last_name;
+          console.log(fullName)
+          connection.query(query, [fullName],(err,results) =>{
+            if (err){
+              console.log('error with rmp DB request');
+            }
+            console.log(results);
+            console.log('Type of results:', typeof results);
+            if (results[0] && results[0].prof_rating !== undefined) {
+              console.log('prof_rating:', results[0].prof_rating);
+              console.log('prof_difficulty:', results[0].prof_difficulty);
+            }
+          });
+
+
+
+
+
     });
   })
   .catch((error) => console.error("Error fetching professors:", error));
