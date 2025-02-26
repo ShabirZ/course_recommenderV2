@@ -35,25 +35,52 @@ app.get("/courses", (req, res) => {
     res.json(results);
   });
 });
-function searchProfRMP(first_name, last_name){
-  /*
+function searchProfCourseAvg(courseName, courseCode, firstName, lastName, callback) {
+  // Format professor name: "Waxman J"
+  let fullName = lastName + " " + firstName[0];
+
   const query = `
-    SELECT prof_rating, prof_difficulty
-    FROM RMP_score 
-    WHERE CONCAT(first_name, ' ', last_name) = ?
-  `
-  let fullName = first_name + last_name;
-  db.query(query, [fullName],(err,results) =>{
+    SELECT AVERAGE, TERM
+    FROM prof_grade_avg
+    WHERE prof = ? AND course = ? AND courseNumber = ?;
+  `;
+
+  const values = [fullName, courseName, parseInt(courseCode)];
+  let average = 0.0;
+  let term_count = 0
+  db.query(query, values, (err, results) => {
+    if (err) {
+      console.error("Database query error:", err);
+      return callback(err, null); // Return error via callback
+    }
+    results.forEach((row) => {
+      // Extract properties from professor object
+      average+=row.currAverage;
+      term_count++;
+    });
+    
+    if(term_count ==0){
+      callback(null, 0);
+    }
+    average = average / term_count
+    callback(null, average); // Return results via callback
+  });
+}
+function searchProfRMP(first_name, last_name){
+
+  let fullName =  first_name + ' '+last_name;
+  console.log(fullName)
+
+  connection.query(query, [fullName],(err,results) =>{
     if (err){
       console.log('error with rmp DB request');
     }
-    if(results.length() == 0){
-      return [-1,-1];
+    if (results[0] && results[0].prof_rating !== undefined) {
+
+      return [results[0].prof_rating,results[0].prof_difficulty]
     }
-    console.log(results[0]);
-    return [results[0],results[1]];
-  
-  });*/
+  });
+
 }
 app.get("/schedule", async (req, res) => {
   const userInput = req.query.search; // Expecting an array like ['Math 101', 'CSCI 313']
@@ -179,19 +206,7 @@ getProfessors("CSCI 313")
             WHERE CONCAT(first_name, ' ', last_name) = ?
           `
 
-          let fullName =  first_name + ' '+last_name;
-          console.log(fullName)
-          connection.query(query, [fullName],(err,results) =>{
-            if (err){
-              console.log('error with rmp DB request');
-            }
-            console.log(results);
-            console.log('Type of results:', typeof results);
-            if (results[0] && results[0].prof_rating !== undefined) {
-              console.log('prof_rating:', results[0].prof_rating);
-              console.log('prof_difficulty:', results[0].prof_difficulty);
-            }
-          });
+          
 
 
 
