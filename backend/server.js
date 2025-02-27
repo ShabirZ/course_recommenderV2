@@ -27,7 +27,7 @@ app.get("/courses", (req, res) => {
     WHERE CONCAT(course_name, ' ', course_code) = ?
   `;
 
-  db.query(query, [userInput], (err, results) => {
+  connection.query(query, [userInput], (err, results) => {
     if (err) {
       console.error("Error executing query:", err);
       return res.status(500).json({ error: "Database query error" });
@@ -35,6 +35,40 @@ app.get("/courses", (req, res) => {
     res.json(results);
   });
 });
+
+function searchProfCourseAvg(courseName, courseCode, firstName, lastName) {
+  return new Promise((resolve, reject) => {
+    const fullName = lastName + " " + firstName[0];
+    const query = `
+      SELECT AVERAGE, TERM
+      FROM prof_grade_avg
+      WHERE prof = ? AND course = ? AND  \`Course Number\` = ?;
+    `;
+    const values = [fullName, courseName, parseInt(courseCode)];
+
+    connection.query(query, values, (err, results) => {
+      if (err) {
+        console.error("Database query error:", err);
+        return reject(err); // Reject the Promise on error
+      }
+
+      let average = 0.0;
+      let term_count = results.length;
+
+      results.forEach((row) => {
+        average += row.AVERAGE;
+      });
+
+      if (term_count > 0) {
+        average /= term_count;
+      }
+
+      resolve(average); // Resolve with the calculated average
+    });
+  });
+}
+
+/*
 function searchProfCourseAvg(courseName, courseCode, firstName, lastName, callback) {
   // Format professor name: "Waxman J"
   let fullName = lastName + " " + firstName[0];
@@ -42,13 +76,13 @@ function searchProfCourseAvg(courseName, courseCode, firstName, lastName, callba
   const query = `
     SELECT AVERAGE, TERM
     FROM prof_grade_avg
-    WHERE prof = ? AND course = ? AND courseNumber = ?;
+    WHERE prof = ? AND course = ? AND Course Number = ?;
   `;
 
   const values = [fullName, courseName, parseInt(courseCode)];
   let average = 0.0;
   let term_count = 0
-  db.query(query, values, (err, results) => {
+  connection.query(query, values, (err, results) => {
     if (err) {
       console.error("Database query error:", err);
       return callback(err, null); // Return error via callback
@@ -58,7 +92,7 @@ function searchProfCourseAvg(courseName, courseCode, firstName, lastName, callba
       average+=row.currAverage;
       term_count++;
     });
-    
+
     if(term_count ==0){
       callback(null, 0);
     }
@@ -66,6 +100,8 @@ function searchProfCourseAvg(courseName, courseCode, firstName, lastName, callba
     callback(null, average); // Return results via callback
   });
 }
+*/
+
 function searchProfRMP(first_name, last_name){
 
   let fullName =  first_name + ' '+last_name;
@@ -107,7 +143,13 @@ app.get("/schedule", async (req, res) => {
             profObj.end_time, 
             profObj.section
           );
-
+          searchProfCourseAvg(course_name, course_code, first_name, last_name, (err, average) => {
+            currentProf.setCourseAverage(-1);
+            if (!err) {
+              console.log(average);
+              currentProf.setCourseAverage(average);
+            }
+          });
 
           
 
@@ -194,8 +236,34 @@ getProfessors("CSCI 313")
 
   .then((professors) => {
     console.log(professors);
+    
+    professors.forEach((profObj) => {
+      // Extract properties from professor object
+      let currentProf = new Prof(
+        profObj.first_name, 
+        profObj.last_name, 
+        profObj.course_name,  // Fixed syntax issue
+        profObj.course_code, 
+        profObj.start_time, 
+        profObj.end_time, 
+        profObj.section
+      );
+      console.log('STARTTT');
+      
+      searchProfCourseAvg(profObj.course_name, profObj.course_code, profObj.first_name, profObj.last_name)
+        .then((average) => {
+          currentProf.setCourseAverage(average || 0);
+          console.log(average)
+        })
+        .catch((err) => {
+          console.error("Error fetching course average:", err);
+        });
+
+      //});
+    /*
     professors.forEach((profObj) => {
       //firstName, lastName, classSubject, classCode, startTime, endTime, section
+     
       console.log(profObj.course_code);
 
       first_name = profObj.first_name;
@@ -205,6 +273,11 @@ getProfessors("CSCI 313")
             FROM RMP_score 
             WHERE CONCAT(first_name, ' ', last_name) = ?
           `
+
+      
+      const professors =  getProfessors(currentClass);
+      
+      */
 
           
 

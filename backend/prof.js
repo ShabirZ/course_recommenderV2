@@ -1,4 +1,4 @@
-export default class Prof {
+class Prof {
     constructor(firstName, lastName, classSubject, classCode, startTime, endTime, section) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,3 +24,4 @@ export default class Prof {
     }
 }
 
+module.exports = Prof;
