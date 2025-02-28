@@ -103,21 +103,29 @@ function searchProfCourseAvg(courseName, courseCode, firstName, lastName, callba
 */
 
 function searchProfRMP(first_name, last_name){
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT prof_rating, prof_difficulty 
+        FROM rmp_score 
+        WHERE first_name = ? AND last_name = ?
+      `;
+  
+      connection.query(query, [first_name, last_name], (err, results) => {
+        if (err) {
+          console.error("Error with RMP DB request:", err);
+          reject(err); // Reject the Promise on error
+          return;
+        }
+  
+        if (results.length > 0 && results[0].prof_rating !== undefined) {
+          resolve([results[0].prof_rating, results[0].prof_difficulty]);
+        } else {
+          resolve(null); // If no results found, return null
+        }
+      });
+    });
+  }
 
-  let fullName =  first_name + ' '+last_name;
-  console.log(fullName)
-
-  connection.query(query, [fullName],(err,results) =>{
-    if (err){
-      console.log('error with rmp DB request');
-    }
-    if (results[0] && results[0].prof_rating !== undefined) {
-
-      return [results[0].prof_rating,results[0].prof_difficulty]
-    }
-  });
-
-}
 app.get("/schedule", async (req, res) => {
   const userInput = req.query.search; // Expecting an array like ['Math 101', 'CSCI 313']
   
@@ -150,6 +158,7 @@ app.get("/schedule", async (req, res) => {
               currentProf.setCourseAverage(average);
             }
           });
+          console.log(`${currentProf.firstName} ${currentProf.lastName} ${currentProf.courseAverage}`);
 
           
 
@@ -253,11 +262,30 @@ getProfessors("CSCI 313")
       searchProfCourseAvg(profObj.course_name, profObj.course_code, profObj.first_name, profObj.last_name)
         .then((average) => {
           currentProf.setCourseAverage(average || 0);
-          console.log(average)
+          console.log(average);
+          console.log(`${currentProf.firstName} ${currentProf.lastName} ${currentProf.courseAverage}`);
+          // Second
         })
         .catch((err) => {
           console.error("Error fetching course average:", err);
         });
+
+        searchProfRMP(profObj.first_name, profObj.last_name)
+        .then((result) => {
+          profObj.prof_rating = result[0];
+          profObj.prof_difficulty = result[1];
+          console.log(profObj.prof_rating,'aaa')
+        })
+
+        .catch((err) => {
+          console.error("Error:", err);
+        });
+              //rating, prof_difficulty = searchProfRMP(first_name, last_name);
+        //profObj.rating = rating;
+        //profObj.prof_difficulty = prof_difficulty;
+        // First
+        //console.log(`${currentProf.firstName} ${currentProf.lastName} ${currentProf.courseAverage} ${profObj.rating} ${profObj.prof_difficulty}`);
+
 
       //});
     /*
