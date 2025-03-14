@@ -120,7 +120,7 @@ function searchProfRMP(first_name, last_name){
         if (results.length > 0 && results[0].prof_rating !== undefined) {
           resolve([results[0].prof_rating, results[0].prof_difficulty]);
         } else {
-          resolve(null); // If no results found, return null
+          resolve([0,0]); // If no results found, return null
         }
       });
     });
@@ -161,16 +161,21 @@ app.get("/schedule", async (req, res) => {
           console.log(`${currentProf.firstName} ${currentProf.lastName} ${currentProf.courseAverage}`);
 
           
-
-
-          console.log(searchProfRMP(first_name, last_name));
+          searchProfRMP(first_name, last_name)
+          .then(([rating, difficulty]) => {
+            profObj.rating = rating;
+            profObj.difficulty = difficulty;
+          })
+          .catch((error) => {
+            console.error("Error fetching professor details:", error);
+          });
           currentProfArr.push(currentProf);
         });
       }
        catch (error) {
         console.error(`Error fetching professors for ${currentClass}:`, error);
       }
-
+      // maybe call scheduler here
       return currentProfArr;
     });
 

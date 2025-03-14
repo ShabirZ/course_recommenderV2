@@ -9,4 +9,5 @@ backend/node_modules
 backend/.env
 /backend/package-lock.json
 /node_modules
-/frontendV2
+
+/frontendV2/node_modules
