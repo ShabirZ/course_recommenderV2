@@ -47,9 +47,9 @@ function Schedule() {
             const isBooked = gridState[i - 7][j]; // Get the state of the current cell (booked or free)
             cols.push(
                 <div
-                    key={time + "-" + j}
+                    key={time + "-" + days[j]}
                     className={`p-2 w-32 border text-center cursor-pointer ${
-                        j === 0 ? "bg-black text-white" : isBooked ? "bg-green-500" : "bg-red-500"
+                        j === 0 ? "bg-black text-white" : isBooked ? "bg-gray-500" : "bg-white"
                     }`}                
                     onMouseDown={j !== 0 ? () => toggleCell(i - 7, j) : undefined}
                     style={{ userSelect: "none" }}
