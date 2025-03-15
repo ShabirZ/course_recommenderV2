@@ -16,13 +16,14 @@ function SearchBar() {
 
     return (
         <input
-            className="w-70 h-20 border border-black text-center text-black text-lg py-2"
-            placeholder="CSCI 313"
-            value={inputValue}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown} // Add the onKeyDown event handler
+          className="w-120 h-20 border border-black text-black text-lg pt-0 text-center overflow-hidden"
+          placeholder="CSCI 313"
+          value={inputValue}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
         />
-    );
+      );
+      
 }
 
 export default SearchBar;

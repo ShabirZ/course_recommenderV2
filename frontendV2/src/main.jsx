@@ -4,6 +4,7 @@ import './index.css';
 import Header from './components/header.jsx';
 import Schedule from './components/timegraph.jsx';
 import SearchBar from './components/searchBar.jsx';
+import ClassCards from './components/classCards.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -11,10 +12,11 @@ createRoot(document.getElementById('root')).render(
       {/* Your content here */}
       <Header />
       <div className='body flex flex-row pt-20'>
-        <div className = "temp SearchBar w-1/2 h-full flex flex-col content-center items-center pt-5 pr-64">
-          <SearchBar/>
+      <div className="temp SearchBar w-1/2 h-full flex flex-col content-center items-center pt-5 pr-64 justify-items-stretch space-y-3">
+        <SearchBar />
+        <ClassCards />
+      </div>
 
-        </div>
 
         <Schedule className = ""/>
       </div>
