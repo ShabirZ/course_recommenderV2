@@ -16,7 +16,7 @@ function SearchBar() {
 
     return (
         <input
-          className="w-120 h-20 border border-black text-black text-lg pt-0 text-center overflow-hidden"
+          className="w-120 h-20  rounded-lg shadow-md border border-black text-black text-lg pt-0 text-center overflow-hidden"
           placeholder="CSCI 313"
           value={inputValue}
           onChange={handleChange}

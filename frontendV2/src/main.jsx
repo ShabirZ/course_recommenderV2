@@ -14,7 +14,13 @@ createRoot(document.getElementById('root')).render(
       <div className='body flex flex-row pt-20'>
       <div className="temp SearchBar w-1/2 h-full flex flex-col content-center items-center pt-5 pr-64 justify-items-stretch space-y-3">
         <SearchBar />
+        <ClassCards className/>
         <ClassCards />
+        <ClassCards />
+
+        <button className="px-4 py-2 bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+  Generate Schedule
+</button>
       </div>
 
 
