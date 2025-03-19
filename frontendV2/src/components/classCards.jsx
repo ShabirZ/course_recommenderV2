@@ -1,44 +1,59 @@
-import React, { useState } from 'react';
-
-
 function ClassCards({ className }) {
-    return (
-      <div className={`shadow-md w-120 h-30 border border-black text-black text-lg pt-0 overflow-hidden flex flex-col ${className}`}>
-        <div className="header flex flex-row justify-between p-6 pt-1 pb-0">
-          <div>CSCI 313</div>
-          <div>Shabir</div>
-        </div>
-        <div className="border-b-1 border-gray-500 w-full h-1"></div>
-        <div className="pl-6">Prof Rating: 3/3</div>
-        <div className="pl-6">Course Average X/4.0</div>
-        <div className="pl-6">Score 8/10</div>
+  return (
+    <div
+      className={`relative shadow-lg w-120 h-32 border border-gray-700 text-white text-lg overflow-hidden flex flex-col ${className} rounded-xl transform hover:scale-[1.05] transition-all duration-300 hover:shadow-2xl`}
+    >
+      {/* Header */}
+      <div className="header flex flex-row justify-between p-4 pt-2">
+        <div className="text-xl font-semibold tracking-wide">CSCI 313</div>
+        <div className="text-base font-medium opacity-80">Shabir Zahir</div>
       </div>
-    );
-  }
-  
 
-  function ClassCardList() {
-    const backgrounds = [
-        'bg-gradient-to-tl from-purple-800 via-purple-600 to-purple-400',
-        'bg-gradient-to-tl from-green-800 via-green-600 to-green-400',
-        'bg-gradient-to-tl from-blue-800 via-blue-600 to-blue-400',
-        'bg-gradient-to-tl from-red-800 via-red-600 to-red-400',
-        'bg-gradient-to-tl from-yellow-800 via-yellow-600 to-yellow-400',
-        'bg-gradient-to-tl from-teal-800 via-teal-600 to-teal-400', // Teal gradient
-        'bg-gradient-to-tl from-pink-800 via-pink-600 to-pink-400', // Pink gradient
-        'bg-gradient-to-tl from-orange-800 via-orange-600 to-orange-400' // Orange gradient
-      ];
-  
-    return (
-      <div className="flex flex-col space-y-3">
-        {backgrounds.map((bgClass, index) => (
-          <ClassCards
-            key={index}
-            className={`${bgClass} transition-all duration-500 hover:opacity-40`}
-          />
-        ))}
+      {/* Divider */}
+      <div className="border-b border-gray-700 w-full -mt-3"></div>
+
+      {/* Details */}
+      <div className="p-4 pt-1 text-sm space-y-1 space ">
+
+        <div className="flex justify-between">
+          <span className="opacity-80">Prof Rating:</span>
+          <span className="font-semibold">3/3</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="opacity-80">Course Average:</span>
+          <span className="font-semibold">X/4.0</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="opacity-80">Score:</span>
+          <span className="font-semibold">8/10</span>
+        </div>
       </div>
-    );
-  }
-  
-  export default ClassCardList;
+    </div>
+  );
+}
+
+function ClassCardList() {
+  const backgrounds = [
+    'bg-blue-600',
+    'bg-green-600',
+    'bg-amber-400',
+    'bg-lime-400',
+    'bg-teal-700',
+    'bg-purple-600',
+    'bg-pink-600',
+    'bg-orange-600'
+  ];
+
+  return (
+    <div className="flex flex-col space-y-4 p-4">
+      {backgrounds.map((bgClass, index) => (
+        <ClassCards
+          key={index}
+          className={`${bgClass} hover:opacity-90 transition-all duration-500`}
+        />
+      ))}
+    </div>
+  );
+}
+
+export default ClassCardList;
