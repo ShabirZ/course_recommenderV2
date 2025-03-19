@@ -6,7 +6,49 @@ import Schedule from './components/timegraph.jsx';
 import SearchBar from './components/searchBar.jsx';
 import ClassCards from './components/classCards.jsx';
 import ClassCardList from './components/classCards.jsx';
+const sampleClasses = [
+  {
+    className: "CSCI 313",
+    day: "Monday",
+    startTime: "13:10",
+    endTime: "14:40",
+    bgColor: "bg-red-500"
+  },
+  {
+    className: "CSCI 313",
+    day: "Wednesday",
+    startTime: "13:10",
+    endTime: "14:40",
+    bgColor: "bg-red-500"
+  },
+  {
+    className: "MATH 220",
+    day: "Wednesday",
+    startTime: "09:00",
+    endTime: "10:30",
+    bgColor: "bg-blue-500"
+  },
+  {
+    className: "ENG 101",
+    day: "Friday",
+    startTime: "11:15",
+    endTime: "12:45",
+    bgColor: "bg-green-500"
+  },
+  {
+    className: "BIO 101",
+    day: "Saturday",
+    startTime: "08:30",
+    endTime: "10:00",
+    bgColor: "bg-purple-500"
+  }
+];
+
+// Then render:
+<Schedule classesData={sampleClasses} />
+
 createRoot(document.getElementById('root')).render(
+  
   <StrictMode>
     <div className='w-full min-h-screen bg-gradient-to-r from-white via-gray-100 to-gray-200 flex flex-col'>
       {/* Your content here */}
@@ -24,7 +66,7 @@ createRoot(document.getElementById('root')).render(
         </div>
 
         <div className = "rightSide">
-          <Schedule className = ""/>
+          <Schedule className = "" classesData={sampleClasses}></Schedule>
 
         </div>
       </div>
