@@ -11,3 +11,4 @@ backend/.env
 /node_modules
 
 /frontendV2/node_modules
+/backendV2/node_modules

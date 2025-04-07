@@ -30,7 +30,7 @@ function Schedule({ classesData }) {
   };
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col items-center p-4 mr-16">
       {/* Header Row */}
       <div className="flex">
         <div className="bg-black text-white p-2 w-32 border text-center">

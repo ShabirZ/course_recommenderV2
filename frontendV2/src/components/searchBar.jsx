@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
+import axios from "axios";
 
 function SearchBar() {
     const [inputValue, setInputValue] = useState('');
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = async (e) => {
         if (e.key === 'Enter') {
-            alert(inputValue); // Or any other action
+            console.log(inputValue);
+            const response = await axios.post("http://localhost:5000/validProf", {
+                fullCourseName : inputValue
+              });
+
+            console.log(response);
+            alert((response.data>0)); // Or any other action
             // Check DB if exists
         }
     };
