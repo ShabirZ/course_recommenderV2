@@ -6,6 +6,17 @@ import Schedule from './components/timegraph.jsx';
 import SearchBar from './components/searchBar.jsx';
 import ClassCards from './components/classCards.jsx';
 import ClassCardList from './components/classCards.jsx';
+import axios from 'axios';
+
+async function generateSchedule(sampleClasses) {
+  //const courseNames = sampleClasses.map(course => course.className);
+  const courseNames = ['CSCI 320', 'CSCI 313', 'CSCI 343']
+  const response = await axios.post("http://localhost:5000/scheduleCreate", {
+    courseNames
+  });
+  return response.data;
+}
+
 const sampleClasses = [
   {
     className: "CSCI 313",
@@ -57,9 +68,11 @@ createRoot(document.getElementById('root')).render(
         <div className="temp SearchBar w-1/2 h-full flex flex-col content-center items-center pt-5 pr-64 justify-items-stretch space-y-3">
           
           <SearchBar />
-          <ClassCardList/>
+          <ClassCardList sampleClasses = {sampleClasses}/>
           
-          <button className="px-4 py-2 bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+          <button className="px-4 py-2 bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50" 
+          onClick={generateSchedule(sampleClasses)}
+          >
             Generate Schedule
           </button>
 

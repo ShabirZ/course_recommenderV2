@@ -1,11 +1,12 @@
-function ClassCards({ className }) {
+function ClassCards({className, courseName}) {
+  
   return (
     <div
       className={`relative shadow-lg w-120 h-32 border border-gray-700 text-white text-lg overflow-hidden flex flex-col ${className} rounded-xl transform hover:scale-[1.05] transition-all duration-300 hover:shadow-2xl`}
     >
       {/* Header */}
       <div className="header flex flex-row justify-between p-4 pt-2">
-        <div className="text-xl font-semibold tracking-wide">CSCI 313</div>
+        <div className="text-xl font-semibold tracking-wide">{courseName}</div>
         <div className="text-base font-medium opacity-80">Shabir Zahir</div>
       </div>
 
@@ -32,7 +33,7 @@ function ClassCards({ className }) {
   );
 }
 
-function ClassCardList() {
+function ClassCardList({sampleClasses}) {
   const backgrounds = [
     'bg-blue-600',
     'bg-green-600',
@@ -46,12 +47,15 @@ function ClassCardList() {
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      {backgrounds.map((bgClass, index) => (
+      {sampleClasses.map((courseData, index) => (
         <ClassCards
           key={index}
-          className={`${bgClass} hover:opacity-90 transition-all duration-500`}
+          className={`${backgrounds[index % backgrounds.length]} hover:opacity-90 transition-all duration-500`}
+          courseName={courseData.className}
         />
-      ))}
+        
+        ))}
+
     </div>
   );
 }

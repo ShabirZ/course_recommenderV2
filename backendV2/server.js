@@ -1,3 +1,5 @@
+const Prof = require('./prof'); // Using require for Prof class
+
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -18,7 +20,59 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Express Server! 🚀");
 });
 
-
+app.post("/scheduleCreate", async (req, res) => {
+    const courses = req.body.courseNames;
+  
+    const query = `
+      SELECT * 
+      FROM courseschedule
+      WHERE CONCAT(course_name, ' ', course_code) = ?
+    `;
+  
+    try {
+      let profList = [];
+  
+      for (let i = 0; i < courses.length; i++) {
+        console.log(courses[i]);
+        const course = courses[i];
+  
+        const profRows = await new Promise((resolve, reject) => {
+          connection.query(query, [course], (err, results) => {
+            if (err) {
+              return reject(err);
+            } else {
+              resolve(results);
+            }
+          });
+        });
+        const newResults = profRows.filter(profRows => !profRows.section.includes("Winter"));
+        
+        /*
+        for (let j = 0; j < profRows.length; j++) {
+          const profObj = profRows[j];
+  
+          const currProf = new Prof(
+            profObj.first_name,
+            profObj.last_name,
+            profObj.course_name,
+            profObj.course_code,
+            profObj.start_time,
+            profObj.end_time,
+            profObj.section
+          );
+          console.log(profObj)
+          profList.push(currProf);
+        }
+        */
+      }
+  
+      //return res.status(200).json({ professors: profList });
+    } catch (err) {
+      console.error("Database error:", err);
+      return res.status(500).send("Internal Server Error");
+    }
+  });
+  
 app.post("/validProf", async (req, res) => {
     const fullCourseName = req.body.fullCourseName; // Access query parameter from the request
     console.log(fullCourseName);
