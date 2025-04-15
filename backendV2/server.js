@@ -1,14 +1,15 @@
 import { scheduleCourses } from './scheduler.js';
+import Prof from './prof.js';
+import express from 'express';
+import cors from 'cors';
+import mysql from 'mysql2';
+import dotenv from 'dotenv';
 
-const Prof = require('./prof'); // Using require for Prof class
-
-const express = require("express");
-const cors = require("cors");
+dotenv.config();
 const app = express();
 app.use(cors()); // Enables CORS for all routes
 app.use(express.json()); // Allows JSON request bodies
-const mysql = require('mysql2');
-require('dotenv').config(); // Load the .env file
+
 
 const connection = mysql.createConnection({
     host: process.env.host,
@@ -44,11 +45,9 @@ async function findProfStats(first_name, last_name) {
 
     // Check if the returned result has the expected length.
     // If it does not, return a default value.
-    if (profData.length !== 2) {
-      return [-1, -1];
-    }
-
-    return profData;
+    if(profData.length!==1) return [-1,-1]
+    
+    return [profData[0].prof_rating,profData[0].prof_difficulty];
   } catch (error) {
     console.error('Error retrieving professor stats:', error);
     throw error;
@@ -64,9 +63,9 @@ app.post("/scheduleCreate", async (req, res) => {
       FROM courseschedule
       WHERE CONCAT(course_name, ' ', course_code) = ?
     `;
-  
+    let profList = [];
     try {
-      let profList = [];
+      
   
       for (let i = 0; i < courses.length; i++) {
         const course = courses[i];
@@ -82,7 +81,7 @@ app.post("/scheduleCreate", async (req, res) => {
         });
         const newResults = profRows.filter(profRows => !profRows.section.includes("Winter"));
         
-  
+        let classRow = []
         for (let j = 0; j < newResults.length; j++) {
           const profObj = newResults[j];
           
@@ -93,17 +92,22 @@ app.post("/scheduleCreate", async (req, res) => {
             profObj.course_code,
             profObj.start_time,
             profObj.end_time,
-            profObj.section
+            profObj.section,
+            profObj.days
           );
           let profFirstName = profObj.first_name;
           let profLastName = profObj.last_name;
           
-          let rmp_rating;
-          let rmp_difficulty;
 
-          findProfStats(profFirstName, profLastName);
-          profList.push(currProf);
+          const [rmp_rating, rmp_difficulty] = await findProfStats(profFirstName, profLastName);
+          currProf.setRMP(rmp_rating, rmp_difficulty);
+          classRow.push(currProf);
+
+        
+
+
         }
+        profList.push(classRow);
         
       }
   
@@ -114,7 +118,27 @@ app.post("/scheduleCreate", async (req, res) => {
     }
 
     //make class that does this to make cleaner
-    allSchedules = scheduleCourses(profList);
+    //const { allSchedules, bestSchedule } = scheduleCourses(profList);    
+    console.log('RUNNING SCHEDULER:');
+    console.log(profList);
+    console.log(scheduleCourses(profList));
+    /*
+    for (let prof of bestSchedule.best) {
+      console.log(`${prof.firstName} ${prof.lastName} - ${prof.classSubject} ${prof.classCode}`);
+    }
+    */
+    /*
+    for(let idx=0; idx < allSchedules.length; idx++){
+      console.log(allSchedules[idx])
+      for(let j=0; j< allSchedules[idx].length; j++){
+
+      
+      console.log('h');
+      console.log(allSchedules[idx][j].firstName);
+      }
+    }
+      */
+    
   });
   
 app.post("/validProf", async (req, res) => {

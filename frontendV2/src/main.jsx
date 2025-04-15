@@ -10,7 +10,7 @@ import axios from 'axios';
 
 async function generateSchedule(sampleClasses) {
   //const courseNames = sampleClasses.map(course => course.className);
-  const courseNames = ['CSCI 320', 'CSCI 313', 'CSCI 343']
+  const courseNames = ['CSCI 313']
   const response = await axios.post("http://localhost:5000/scheduleCreate", {
     courseNames
   });

@@ -1,18 +1,55 @@
+function timeToMinutes(time) {
+    let hours;
+    let minutes;
+    let PM = 0;
+
+    // Split the time into hours and minutes
+    time = time.split(':');
+    hours = time[0];
+    minutes = time[1].slice(0, -2); // Remove AM/PM suffix from minutes
+    let suffix = time[1].slice(-2); // Get AM/PM suffix
+
+    // Adjust hours based on AM/PM
+    if (suffix === 'PM') {
+        if (hours !== '12') {
+            hours = parseInt(hours) + 12; // Convert PM hours to 24-hour format
+        }
+    } else if (suffix === 'AM' && hours === '12') {
+        hours = 0; // Convert 12 AM to 0 hours
+    }
+
+    // Convert minutes to integer
+    minutes = parseInt(minutes);
+
+    // Convert to total minutes since midnight
+    return hours * 60 + minutes;
+}
+
 function isConflict(schedule, course) {
+    let prevStart, prevEnd;
+    let courseStart, courseEnd;
+    courseStart = (timeToMinutes(course.startTime));
+    courseEnd  = timeToMinutes(course.endTime);
+
     //after
     for (let prevCourse of schedule) {
         // this will bug out on odd classes like classes only on one day 
         // fix later
+
         if(prevCourse.days != course.days){
             continue;
         }
 
-        if( (prevCourse.startTime <= course.startTime <= prevCourse.endTime) || (course.startTime <= prevCourse.startTime <= course.endTime)  )
+        prevStart = timeToMinutes(prevCourse.startTime);
+        prevEnd = timeToMinutes(prevCourse.endTime);
+        console.log(prevStart, prevEnd);
+        console.log(courseStart, courseEnd);
+        if( (prevStart <= courseStart <= prevEnd) || (courseStart <= prevStart <= courseEnd)  )
             return true; // conflict in schedule
 
     }
 
-
+    /*
     //before
     for (let scheduledCourse of schedule) {
         for (let time of scheduledCourse.times) {
@@ -23,6 +60,7 @@ function isConflict(schedule, course) {
             }
         }
     }
+    */
     return false;
 }
 
@@ -38,6 +76,9 @@ function backtrack(courses, index, schedule, allSchedules, bestSchedule) {
         // Update the best schedule if this one has a higher score
         if (!bestSchedule.best || scheduleScore > bestSchedule.best.score) {
             bestSchedule.best = { schedule: [...schedule], score: scheduleScore };
+            for(let idx = 0; idx<schedule.length; idx++){
+                console.log(schedule[idx].firstName);
+            }
         }
         return;
     }
@@ -56,25 +97,11 @@ function backtrack(courses, index, schedule, allSchedules, bestSchedule) {
 function scheduleCourses(courseOptions) {
     let allSchedules = [];
     let bestSchedule = { best: null };
+    console.log(courseOptions);
     backtrack(courseOptions, 0, [], allSchedules, bestSchedule);
     
     return allSchedules.length > 0 ? { allSchedules, bestSchedule: bestSchedule.best } : "No valid schedule found";
 }
 
-// Example Input
-const courses = [
-    [
-        { name: "Math 101", instructor: "John Doe", days: "MoWe", times: ["11:00AM-1:00PM"], getRating: () => 8 },
-        { name: "Math 101", instructor: "John Doe", days: "TuTh", times: ["9:00AM-11:00AM"], getRating: () => 7 }
-    ],
-    [
-        { name: "CS 101", instructor: "Jane Smith", days: "MoWe", times: ["1:00PM-3:00PM"], getRating: () => 9 },
-        { name: "CS 101", instructor: "Jane Smith", days: "TuTh", times: ["11:00AM-1:00PM"], getRating: () => 6 }
-    ],
-    [
-        { name: "Physics 101", instructor: "Mike Brown", days: "MoWe", times: ["9:00AM-11:00AM"], getRating: () => 8 },
-        { name: "Physics 101", instructor: "Mike Brown", days: "TuTh", times: ["3:00PM-5:00PM"], getRating: () => 5 }
-    ]
-];
 export { scheduleCourses };
-console.log(scheduleCourses(courses));
+
