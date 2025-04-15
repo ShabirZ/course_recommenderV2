@@ -1,3 +1,5 @@
+import { scheduleCourses } from './scheduler.js';
+
 const Prof = require('./prof'); // Using require for Prof class
 
 const express = require("express");
@@ -20,6 +22,40 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Express Server! 🚀");
 });
 
+//test this
+async function findProfStats(first_name, last_name) {
+  const query = `
+    SELECT prof_rating, prof_difficulty
+    FROM rmp_score
+    WHERE first_name = ? AND last_name = ?
+  `;
+  // Create an array for the query parameters
+  const queryParams = [first_name, last_name];
+
+  try {
+    const profData = await new Promise((resolve, reject) => {
+      connection.query(query, queryParams, (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+
+    // Check if the returned result has the expected length.
+    // If it does not, return a default value.
+    if (profData.length !== 2) {
+      return [-1, -1];
+    }
+
+    return profData;
+  } catch (error) {
+    console.error('Error retrieving professor stats:', error);
+    throw error;
+  }
+}
+
+
 app.post("/scheduleCreate", async (req, res) => {
     const courses = req.body.courseNames;
   
@@ -33,7 +69,6 @@ app.post("/scheduleCreate", async (req, res) => {
       let profList = [];
   
       for (let i = 0; i < courses.length; i++) {
-        console.log(courses[i]);
         const course = courses[i];
   
         const profRows = await new Promise((resolve, reject) => {
@@ -47,10 +82,10 @@ app.post("/scheduleCreate", async (req, res) => {
         });
         const newResults = profRows.filter(profRows => !profRows.section.includes("Winter"));
         
-        /*
-        for (let j = 0; j < profRows.length; j++) {
-          const profObj = profRows[j];
   
+        for (let j = 0; j < newResults.length; j++) {
+          const profObj = newResults[j];
+          
           const currProf = new Prof(
             profObj.first_name,
             profObj.last_name,
@@ -60,10 +95,16 @@ app.post("/scheduleCreate", async (req, res) => {
             profObj.end_time,
             profObj.section
           );
-          console.log(profObj)
+          let profFirstName = profObj.first_name;
+          let profLastName = profObj.last_name;
+          
+          let rmp_rating;
+          let rmp_difficulty;
+
+          findProfStats(profFirstName, profLastName);
           profList.push(currProf);
         }
-        */
+        
       }
   
       //return res.status(200).json({ professors: profList });
@@ -71,6 +112,9 @@ app.post("/scheduleCreate", async (req, res) => {
       console.error("Database error:", err);
       return res.status(500).send("Internal Server Error");
     }
+
+    //make class that does this to make cleaner
+    allSchedules = scheduleCourses(profList);
   });
   
 app.post("/validProf", async (req, res) => {

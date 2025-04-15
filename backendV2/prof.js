@@ -10,6 +10,7 @@ class Prof {
         this.RMP_rating = null;
         this.RMP_difficulty = null;
         this.courseAverage = null;
+        this.days = []
     }
     setCourseAverage(courseAverage){
         this.courseAverage = courseAverage;
