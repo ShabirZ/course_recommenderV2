@@ -65,8 +65,9 @@ function isConflict(schedule, course) {
 }
 
 function calculateScore(schedule) {
-    return schedule.reduce((total, course) => (total + course.getRating()).toFixed(2), 0);
-}
+    let total = schedule.reduce((sum, course) => sum + course.getRating(), 0);
+    return parseFloat(total.toFixed(2)); // ensure it's a number, not a string
+  }
 
 function backtrack(courses, index, schedule, allSchedules, bestSchedule) {
     if (index === courses.length) {

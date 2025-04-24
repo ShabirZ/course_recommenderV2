@@ -27,9 +27,12 @@ async function findProfAvg(firstName, lastName,courseName, courseCode){
   const query = `
     SELECT Average, Term
     FROM prof_grade_avg
-    WHERE prof = ? AND course = ? and "Course Number" = ?
+    WHERE prof = ? AND course = ? AND \`Course Number\` = ?
   `;
+  lastName = lastName.toUpperCase();
+  firstName = firstName.toUpperCase();
   let profQueryName = lastName + ' ' + firstName[0];
+
   const queryParams = [profQueryName, courseName, parseInt(courseCode)];
   try {
     const profAverages = await new Promise((resolve, reject) => {
@@ -47,9 +50,10 @@ async function findProfAvg(firstName, lastName,courseName, courseCode){
     // take average
     let total  = 0;
     for(let i=0; i< profAverages.length; i++){
-      total+=profAverages[i][0].toFixed(2);
+      total+=parseFloat(profAverages[i]["Average"]);
+
     }
-    return total.toFixed(2);
+    return (total/ profAverages.length).toFixed(2);
   } catch (error) {
     console.error('Error retrieving professor stats:', error);
     throw error;
@@ -134,7 +138,6 @@ app.post("/scheduleCreate", async (req, res) => {
 
           const [rmp_rating, rmp_difficulty] = await findProfStats(profFirstName, profLastName);
           const profCourseAvg = await findProfAvg(profFirstName, profLastName, profObj.course_name, profObj.course_code);
-          console.log(profCourseAvg);
 
           currProf.setCourseAverage(profCourseAvg);
           currProf.setRMP(rmp_rating, rmp_difficulty);
@@ -158,24 +161,29 @@ app.post("/scheduleCreate", async (req, res) => {
     //const { allSchedules, bestSchedule } = scheduleCourses(profList);    
     console.log('RUNNING SCHEDULER:');
     console.log(profList);
-    console.log(scheduleCourses(profList));
-    /*
-    for (let prof of bestSchedule.best) {
+    let a,b;
+    let {allSchedules, bestSchedule} = scheduleCourses(profList);
+
+    
+    console.log('BEST');
+    
+    console.log(bestSchedule.score)
+    for (let prof of bestSchedule.schedule) {
       console.log(`${prof.firstName} ${prof.lastName} - ${prof.classSubject} ${prof.classCode}`);
     }
-    */
-    /*
+    
+  
+    
     for(let idx=0; idx < allSchedules.length; idx++){
       console.log(allSchedules[idx])
       for(let j=0; j< allSchedules[idx].length; j++){
 
       
-      console.log('h');
       console.log(allSchedules[idx][j].firstName);
       }
     }
-      */
     
+
   });
   
 app.post("/validProf", async (req, res) => {
@@ -204,8 +212,7 @@ app.post("/validProf", async (req, res) => {
             });
         });
 
-        console.log(results); // Log the result to inspect it
-        console.log(results[0]['count']); // Log the count value
+
 
         // Send the response after the query is completed
         res.json(results[0]['count'] );
