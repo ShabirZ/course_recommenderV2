@@ -23,6 +23,39 @@ app.get("/", (req, res) => {
   res.send("Welcome to the Express Server! 🚀");
 });
 
+async function findProfAvg(firstName, lastName,courseName, courseCode){
+  const query = `
+    SELECT Average, Term
+    FROM prof_grade_avg
+    WHERE prof = ? AND course = ? and "Course Number" = ?
+  `;
+  let profQueryName = lastName + ' ' + firstName[0];
+  const queryParams = [profQueryName, courseName, parseInt(courseCode)];
+  try {
+    const profAverages = await new Promise((resolve, reject) => {
+      connection.query(query, queryParams, (err, results) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(results);
+      });
+    });
+
+    // Check if professor DID NOT teach any classes before
+    if(profAverages.length==0) return 2.75;
+
+    // take average
+    let total  = 0;
+    for(let i=0; i< profAverages.length; i++){
+      total+=profAverages[i][0].toFixed(2);
+    }
+    return total.toFixed(2);
+  } catch (error) {
+    console.error('Error retrieving professor stats:', error);
+    throw error;
+  }
+}
+
 //test this
 async function findProfStats(first_name, last_name) {
   const query = `
@@ -100,6 +133,10 @@ app.post("/scheduleCreate", async (req, res) => {
           
 
           const [rmp_rating, rmp_difficulty] = await findProfStats(profFirstName, profLastName);
+          const profCourseAvg = await findProfAvg(profFirstName, profLastName, profObj.course_name, profObj.course_code);
+          console.log(profCourseAvg);
+
+          currProf.setCourseAverage(profCourseAvg);
           currProf.setRMP(rmp_rating, rmp_difficulty);
           classRow.push(currProf);
 
