@@ -10,6 +10,8 @@ const app = express();
 app.use(cors()); // Enables CORS for all routes
 app.use(express.json()); // Allows JSON request bodies
 
+let allSchedules = [];
+let bestSchedule = null;
 
 const connection = mysql.createConnection({
     host: process.env.host,
@@ -18,6 +20,8 @@ const connection = mysql.createConnection({
     database: process.env.database,
   });
 connection.connect();
+
+
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Express Server! 🚀");
@@ -45,7 +49,7 @@ async function findProfAvg(firstName, lastName,courseName, courseCode){
     });
 
     // Check if professor DID NOT teach any classes before
-    if(profAverages.length==0) return 2.75;
+    if(profAverages.length==0) return -1.0;
 
     // take average
     let total  = 0;
@@ -59,6 +63,7 @@ async function findProfAvg(firstName, lastName,courseName, courseCode){
     throw error;
   }
 }
+
 
 //test this
 async function findProfStats(first_name, last_name) {
@@ -92,9 +97,25 @@ async function findProfStats(first_name, last_name) {
 }
 
 
+async function getCourseProfessors(courses){
+  
+}
+app.get('/schedules', async (req, res) => {
+  const idx = req.query.idx !== undefined
+    ? parseInt(req.query.idx, 10)
+    : NaN;
+
+  if (allSchedules.length === 0) return res.json([]);
+
+  if (isNaN(idx) || idx < 0) return res.json(allSchedules[0]);
+
+  if (idx >= allSchedules.length) return res.json(allSchedules[allSchedules.length - 1]);
+  return res.json(allSchedules[idx]);
+});
+
 app.post("/scheduleCreate", async (req, res) => {
     const courses = req.body.courseNames;
-  
+
     const query = `
       SELECT * 
       FROM courseschedule
@@ -118,7 +139,10 @@ app.post("/scheduleCreate", async (req, res) => {
         });
         const newResults = profRows.filter(profRows => !profRows.section.includes("Winter"));
         
-        let classRow = []
+        let classRow = [];
+        let profCount = 0;
+        let avgTotal = 0.0;
+        let emptyProfs = [];
         for (let j = 0; j < newResults.length; j++) {
           const profObj = newResults[j];
           
@@ -139,13 +163,24 @@ app.post("/scheduleCreate", async (req, res) => {
           const [rmp_rating, rmp_difficulty] = await findProfStats(profFirstName, profLastName);
           const profCourseAvg = await findProfAvg(profFirstName, profLastName, profObj.course_name, profObj.course_code);
 
-          currProf.setCourseAverage(profCourseAvg);
+          if(profCourseAvg != -1.0){
+            profCount+=1;
+            avgTotal+= parseFloat(profCourseAvg);
+            currProf.setCourseAverage(profCourseAvg);
+          }
+          else{
+            emptyProfs.push(currProf);
+          }
+
           currProf.setRMP(rmp_rating, rmp_difficulty);
           classRow.push(currProf);
+        }
+        let totalCourseAverage = avgTotal / profCount;
 
-        
-
-
+        for(let prof of emptyProfs){
+          console.log(prof.firstName);
+          prof.setCourseAverage(totalCourseAverage);
+          console.log(prof.courseAverage);
         }
         profList.push(classRow);
         
@@ -161,13 +196,17 @@ app.post("/scheduleCreate", async (req, res) => {
     //const { allSchedules, bestSchedule } = scheduleCourses(profList);    
     console.log('RUNNING SCHEDULER:');
     console.log(profList);
-    let a,b;
-    let {allSchedules, bestSchedule} = scheduleCourses(profList);
 
-    
+    const results = scheduleCourses(profList);
+    allSchedules = results.allSchedules;
+    bestSchedule = results.bestSchedule;
+
+    res.json(bestSchedule);
+    /*()
     console.log('BEST');
     
-    console.log(bestSchedule.score)
+    console.log(bestSchedule.score);
+    
     for (let prof of bestSchedule.schedule) {
       console.log(`${prof.firstName} ${prof.lastName} - ${prof.classSubject} ${prof.classCode}`);
     }
@@ -182,6 +221,7 @@ app.post("/scheduleCreate", async (req, res) => {
       console.log(allSchedules[idx][j].firstName);
       }
     }
+    */
     
 
   });

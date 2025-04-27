@@ -95,12 +95,20 @@ function backtrack(courses, index, schedule, allSchedules, bestSchedule) {
     }
 }
 
+function sortSchedules(schedules) {
+    // slice() to avoid mutating the original if you care
+    return schedules
+      .slice()
+      .sort((a, b) => b.score - a.score);
+  }
+
 function scheduleCourses(courseOptions) {
     let allSchedules = [];
     let bestSchedule = { best: null };
     console.log(courseOptions);
     backtrack(courseOptions, 0, [], allSchedules, bestSchedule);
-    
+
+    allSchedules = sortSchedules(allSchedules);
     return allSchedules.length > 0 ? { allSchedules, bestSchedule: bestSchedule.best } : "No valid schedule found";
 }
 
