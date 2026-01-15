@@ -1,185 +1,64 @@
-*{
-  padding: 0px;
-  margin: 0px;
-  box-sizing: border-box;
-  font-family: "inter";
-}
-body{
-  background-color: #040507;
-}
-.background{
-  background-color: #040507;
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 
-  width: 100vw;
-  height: 120vh;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-.header{
-  background-color:#8000FF
-  ;
-  width: 100%;
-  height:5vh;
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-content: center;
-  flex-direction: row;
-  padding-left:5vw;
-  padding-right: 5vw;
-  text-align: center;
-  box-sizing: border-box
-  
-
-}
-.social{
-  font-family:'Inter';
-  font-size: large;
-  align-items: center;
-  text-align: center;
-}
-.discord, .linkedin{
-  align-items: center;
-  align-content: center;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
 }
 
-
-.columns-container{
-  width: 100%;
-  height: 80%;
-  display: flex;
-  border-radius: 1px;
-  display: flex;
-  justify-content:flex-end;
-  
-  padding:5%;
-  padding-left: 30%;
-  padding-right: 5%;
-  border: 2px indigo-500;
-}
-.column{
-  width: 14.28%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
 }
 
-.body{
-  display: flex;
-  flex-direction: row;
-  justify-content:space-between;
-  align-items:flex-start;
-  width: 100%;
-  height: 100%;
+button {
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
 }
 
-.searchbar{
-  width: 20%;
-  height:8%;
-  background-color: solid aquamarine;
-  border: 2px solid red;
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
 }
 
-.cell{
-  /* Your styles for the row inside col */
-  background-color: lightblue;
-  border: 1px solid #040507;
-  width: 100%;
-  display: flex;
-  flex-direction:column;
-  align-items: center;
-  justify-content: center;
-}
-.divider{
-  width: 100%;
-  height: 1px;
-  border: 1px solid red;
-}
-
-.leftSide{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  height: 100%;
-  width: 70%;
-  border: 2px solid red;
-  display: flex;
-  justify-content: flex-start;
-  padding: 5%;
-  flex-direction: column;
-}
-.rightside{
-  width: 60%;
-  height: 30%;
-}
-.timeGraph{
-  width: 80%;
-}
-
-  /*
-=============================================================================
-Course Selection
-  */
-  .courseBody{
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-    padding: 5%;
-    flex-direction: column;
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
   }
-  .classSearch{
-    /*width: 45%;*/
-    height: 8vh;
-    font-size: large;
-    border-radius: 4px;
-    padding: 4px;
-    /* box-shadow: 2px 2px 8px #9da8cd; /* Soft shadow */
-
+  a:hover {
+    color: #747bff;
   }
-
-  .valid{
-    color: green;
-    
+  button {
+    background-color: #f9f9f9;
   }
-
-  .test{
-    color: green;
-    background-color: red;
-  }
-  .classCard{
-    border: 2px solid white;
-    margin-top: 15px;
-    padding-right: 5px;
-  }
-
-  .ratings{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content:space-between;
-  }
-
-  .courseName, .ratings{
-    padding: 2px;
-    margin: 2px;
-  }
-
-  .divder{
-    margin: -20px;
-  }
-
-
-  .genereateCourses{
-    width: 10vw;
-    height: 10vh;
-    padding: 5%;
-    margin: 5%;
-    font-size: 90%;
-    background-color:#D6A5D6; 
-    border-radius: 2%;
-    font-weight: 500;
-    color:white;
-    border: 2px solid white;
-  }
+}
