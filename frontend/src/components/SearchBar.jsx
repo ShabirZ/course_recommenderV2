@@ -10,7 +10,7 @@ const SearchBar = ( props ) => {
     };
     const checkCourse = async (courseQuery) => {
         const response = await fetch(
-        `http://127.0.0.1:8000/course_exists?course_query=${courseQuery}`
+        `http://localhost:8000/course_exists?course_query=${courseQuery}`
         );
         if(validationTextState != ""){
             return;

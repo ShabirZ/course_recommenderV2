@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - ./cunycoursescheduler_data.sql:/docker-entrypoint-initdb.d/cunycoursescheduler.sql
+    ports:
+      - "3307:3306"
+    
+    
+  backend:
+    image: course_backend
+    build: 
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  
+
+

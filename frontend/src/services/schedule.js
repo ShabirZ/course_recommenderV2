@@ -1,7 +1,7 @@
 // services/scheduleService.js
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
-
+//const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL = "http://localhost:8000";
 
 const dayMap = {
   Mo: "Monday",
@@ -115,6 +115,7 @@ export const fetchSchedules = async (courses, semesterType, limit = 1, page = 1)
     params.append('page', page.toString());
 
     // 2. Combine base URL with the params
+    const API_BASE_URL = "http://localhost:8000";
     const response = await fetch(`${API_BASE_URL}/generate_schedule?${params.toString()}`);
     
     if (!response.ok) {
