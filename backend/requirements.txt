@@ -3,3 +3,5 @@ mysql-connector-python
 sqlalchemy
 sqlmodel
 pydantic
+pymysql>=1.0.2
+cloud-sql-python-connector[pymysql]

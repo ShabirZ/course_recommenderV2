@@ -15,3 +15,4 @@ backend/.env
 /.tmp
 __pycache__/
 cunycoursescheduler_data.sql
+.vscode
