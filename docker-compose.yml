@@ -1,29 +1,23 @@
 services:
-  db:
-    image: mysql:8
-    restart: always
+  cloudsql-proxy:
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0
+    command: >
+      /cloud-sql-proxy
+      ${CLOUD_SQL_INSTANCE}
+      --port=3306
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      - GOOGLE_APPLICATION_CREDENTIALS=/secrets/service-account.json
     volumes:
-      - ./cunycoursescheduler_data.sql:/docker-entrypoint-initdb.d/cunycoursescheduler.sql
-    ports:
-      - "3307:3306"
-    
-    
+      - ./secrets:/secrets:ro
+    restart: always
+
   backend:
     image: course_backend
-    build: 
+    build:
       context: ./backend
-    volumes:
-      - ./backend:/app
     env_file:
       - .env
     ports:
       - "8000:8000"
     depends_on:
-      - db
-
-  
-
-
+      - cloudsql-proxy
