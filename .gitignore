@@ -16,3 +16,4 @@ backend/.env
 __pycache__/
 cunycoursescheduler_data.sql
 .vscode
+/secrets/*
