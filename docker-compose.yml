@@ -6,7 +6,7 @@ services:
       ${CLOUD_SQL_INSTANCE}
       --port=3306
     environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=/secrets/service-account.json
+      - GOOGLE_APPLICATION_CREDENTIALS=/secrets/gcp-secrets.json
     volumes:
       - ./secrets:/secrets:ro
     restart: always
@@ -17,6 +17,10 @@ services:
       context: ./backend
     env_file:
       - .env
+    environment:                                                
+      - GOOGLE_APPLICATION_CREDENTIALS=/secrets/gcp-secrets.json   
+    volumes:                                                    
+      - ./secrets:/secrets:ro                                
     ports:
       - "8000:8000"
     depends_on:
